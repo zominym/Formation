@@ -9,7 +9,7 @@ namespace LieuxDeFormation
 	{
 		public static void Main (string[] args)
 		{
-			StreamReader fs = new StreamReader ("LieuxPossibles.txt");
+			StreamReader fs = new StreamReader ("../../LieuxPossibles.txt");
 
 			String line;
 			int counter = 0;
