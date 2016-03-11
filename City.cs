@@ -9,7 +9,7 @@ namespace LieuxDeFormation
 
 		}
 
-		public City (Sring csvLine){
+		public City (String csvLine){
 			// "id";"nom";"codepostal";"longitude";"latitude"
 		}
 	}
