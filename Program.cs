@@ -9,15 +9,18 @@ namespace LieuxDeFormation
 	{
 		public static void Main (string[] args)
 		{
-			FileStream fs = File.Open ("../../ListeAgences_100.txt", FileMode.Open);
+			StreamReader fs = new StreamReader ("LieuxPossibles.txt");
 
-			UTF8Encoding temp = new UTF8Encoding(true);
-			byte[] b = new byte[1024];
+			String line;
+			int counter = 0;
 
-			while (fs.Read(b,0,b.Length) > 0)
+			while((line = fs.ReadLine()) != null)
 			{
-				Console.WriteLine(temp.GetString(b));
+				Console.WriteLine (counter + ": " + line);
+				counter++;
 			}
+
+			fs.Close ();
 		}
 	}
 }
