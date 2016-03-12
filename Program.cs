@@ -9,18 +9,40 @@ namespace LieuxDeFormation
 	{
 		public static void Main (string[] args)
 		{
+			City c1 = new City ();
+			City c2 = new City ();
+
+			List<City> cities = loadCities();
+
+			foreach (City c in cities) {
+				Console.WriteLine (c);
+				if (c.getId() == "lyon")
+					c1 = c;
+				if (c.getId() == "paris")
+					c2 = c;
+			}
+
+			Console.WriteLine (c1);
+			Console.WriteLine (c2);
+			Console.WriteLine (c1.distanceTo (c2));
+			Console.WriteLine ("End");
+		}
+
+		public static List<City> loadCities()
+		{
+			List<City> cities = new List<City> ();
 			StreamReader fs = new StreamReader ("../../LieuxPossibles.txt");
 
-			String line;
-			int counter = 0;
+			String line = fs.ReadLine();
 
 			while((line = fs.ReadLine()) != null)
 			{
-				Console.WriteLine (counter + ": " + line);
-				counter++;
+				cities.Add(new City(line));
 			}
 
 			fs.Close ();
+
+			return cities;
 		}
 	}
 }
