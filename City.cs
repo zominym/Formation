@@ -22,8 +22,8 @@ namespace LieuxDeFormation
 			id = csvTab [0];
 			name = csvTab [1];
 			codepostal = csvTab [2];
-			longitude = double.Parse (csvTab [3]);
-			latitude = double.Parse (csvTab [4]);
+			longitude = double.Parse (csvTab[3].Replace(".", ","));
+			latitude = double.Parse (csvTab [4].Replace(".", ","));
 		}
 
 		public override string ToString ()

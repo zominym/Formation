@@ -26,7 +26,8 @@ namespace LieuxDeFormation
 			Console.WriteLine (c2);
 			Console.WriteLine (c1.distanceTo (c2));
 			Console.WriteLine ("End");
-		}
+            Console.ReadKey(true);
+        }
 
 		public static List<City> loadCities()
 		{
