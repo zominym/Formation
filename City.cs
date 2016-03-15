@@ -22,13 +22,19 @@ namespace LieuxDeFormation
 			id = csvTab [0];
 			name = csvTab [1];
 			codepostal = csvTab [2];
-			longitude = double.Parse (csvTab[3].Replace(".", ","));
-			latitude = double.Parse (csvTab [4].Replace(".", ","));
+
+			if (MainClass.IsLinux) {
+				longitude = double.Parse (csvTab [3]);
+				latitude = double.Parse (csvTab [4]);
+			} else {
+				longitude = double.Parse (csvTab [3].Replace (".", ","));
+				latitude = double.Parse (csvTab [4].Replace (".", ","));
+			}
 		}
 
 		public override string ToString ()
 		{
-			return id + " : " + name + " ; " + codepostal + " (" + longitude + "," + latitude + ")";
+			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ")";
 		}
 
 		public double distanceTo(City c)
