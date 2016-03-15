@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace LieuxDeFormation
 {
@@ -9,7 +11,10 @@ namespace LieuxDeFormation
 	{
 		public static void Main (string[] args)
 		{
-			City c1 = new City ();
+            // Set current thread culture to en - US.
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            City c1 = new City ();
 			City c2 = new City ();
 
 			List<City> cities = loadCities();

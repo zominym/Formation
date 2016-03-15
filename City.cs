@@ -18,18 +18,13 @@ namespace LieuxDeFormation
 		public City (String csvLine){
 			// "id";"nom";"codepostal";"longitude";"latitude"
 
-			String[] csvTab = csvLine.Replace ("\"", "").Split (';');
+            String[] csvTab = csvLine.Replace ("\"", "").Split (';');
 			id = csvTab [0];
 			name = csvTab [1];
 			codepostal = csvTab [2];
-
-			if (MainClass.IsLinux) {
-				longitude = double.Parse (csvTab [3]);
-				latitude = double.Parse (csvTab [4]);
-			} else {
-				longitude = double.Parse (csvTab [3].Replace (".", ","));
-				latitude = double.Parse (csvTab [4].Replace (".", ","));
-			}
+            longitude = Double.Parse(csvTab[3]);
+            latitude = Double.Parse(csvTab[4]);
+						
 		}
 
 		public override string ToString ()
