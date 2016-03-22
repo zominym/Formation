@@ -4,6 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LieuxDeFormation
 {
@@ -21,17 +23,29 @@ namespace LieuxDeFormation
 			List<City> cities = loadCities();
 
 			foreach (City c in cities) {
-				rainbowprintLine (c.ToString(), "rainbow", 5);
+//				rainbowprintLine (c.ToString(), "rainbow", 5);
+
+//				coolRandPrint (c.ToString());
 				if (c.getId() == "lyon")
 					c1 = c;
 				if (c.getId() == "paris")
 					c2 = c;
 			}
 
-			rainbowprintLine (c1.ToString(), "rainbow", 5);
-			rainbowprintLine (c2.ToString(), "rainbow", 5);
-			rainbowprintLine (c1.distanceTo (c2).ToString(), "rainbow", 5);
-			rainbowprintLine ("END", "rainbow", 5);
+//			rainbowprintLine (c1.ToString(), "rainbow", 5);
+//			rainbowprintLine (c2.ToString(), "rainbow", 5);
+//			rainbowprintLine (c1.distanceTo (c2).ToString(), "rainbow", 5);
+//			rainbowprintLine ("END", "rainbow", 5);
+
+			coolRandPrint (c1.ToString());
+			coolRandPrint (c2.ToString());
+			coolRandPrint (c1.distanceTo (c2).ToString());
+			coolRandPrint ("END");
+
+			//Console.ForegroundColor = Console.ForegroundColor;
+
+			//Console.ForegroundColor = ConsoleColor.White;
+			coolRandPrint("This is the test of a cool random print.");
             Console.ReadKey(true);
         }
 
@@ -112,6 +126,27 @@ namespace LieuxDeFormation
 				Console.WriteLine("UNSUPPORTED RAINBOWPRINT STYLE");
 				break;
 			}
+		}
+
+		public static async void coolRandPrint(string s) {
+			int currentLineCursor = Console.CursorTop;
+			Random rand = new Random();
+			List<int> notok = Enumerable.Range(0, s.Length - 1).ToList();
+			do {
+
+				Console.SetCursorPosition(0, currentLineCursor);
+				for (int i = 0; i < s.Length; i++) {
+					if (notok.Contains(i)) {
+						char c = s[notok[rand.Next(0, notok.Count)]];
+						if (c == s[i])
+							notok.Remove(i);
+						Console.Write(c);
+					} else {
+						Console.Write(s[i]);
+					}
+				}
+				await Task.Delay(100);
+			} while (notok.Count > 0);
 		}
 	}
 }
