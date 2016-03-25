@@ -7,6 +7,8 @@ using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
 
+using TrainingProblem;
+
 namespace LieuxDeFormation
 {
 	class MainClass
@@ -26,7 +28,7 @@ namespace LieuxDeFormation
 		 * 
 		 * 
 		 * 
-		 * /
+         */
 
 
 		public static void Main (string[] args)

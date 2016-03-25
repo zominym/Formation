@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LieuxDeFormation
+namespace TrainingProblem
 {
 	public class City
 	{
