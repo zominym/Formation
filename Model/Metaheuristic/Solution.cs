@@ -82,6 +82,24 @@ namespace Metaheuristic
             
             return tripFee + agenciesFee;
         }
+
+        public Solution getGradientDescendSolution()
+        {
+            Solution best = this, tmp;
+            while ((tmp = best.getBestNeighbor()) != best)
+                best = tmp;
+            return best;
+        }
+
+        public Solution getBestNeighbor(Solution s)
+        {
+            Solution best = s;
+            foreach (Solution neighbor in Neighbors)
+                if (neighbor.cost() < best.cost())
+                    best = neighbor;
+            return best;
+        }
+            
 			
         public override string ToString(){
             string str = "";
@@ -92,7 +110,6 @@ namespace Metaheuristic
 				str += "CITY " + " " + Cities[i].getId();
 				str += "\n";
             }
-
             return str;
         }
     }
