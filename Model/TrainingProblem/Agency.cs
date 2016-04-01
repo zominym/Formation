@@ -13,7 +13,7 @@ namespace TrainingProblem
 
 		public Agency(string csvLine) : base(csvLine)
 		{
-			nbPers = csvLine.Split (';')[5];
+			nbPers = int.Parse(csvLine.Split (';')[5]);
 		}
 
 		public override string ToString ()

@@ -13,7 +13,8 @@ namespace LieuxDeFormation
 {
 	class MainClass
 	{
-
+		const string citiesFile = "../../LieuxPossiblesTEST.txt";
+		const string agenciesFile = "../../ListeAgences_TEST.txt";
 
 		// BROUILLON
 		/*
@@ -21,8 +22,10 @@ namespace LieuxDeFormation
 		 * - Une solution : Hashmap d'agences qui ont un centre de formation (une ville)
 		 * 		- Remarque : On laisse les personnes d'une agence dans le même centre de formation.
 		 * - La fonction à minimiser : TODO
-		 * - Le voisinnage : Déplacer une agence d'une ville à une autre
+		 * - Le voisinnage : Echanger les centres de formation de deux agences
 		 * 		- Remarque : On peut mettre une limite à la distance maximale d'un déplacement (On ne peut pas affecter une agence à un centre éloigné de plus de X (e.g. 500) Km
+		 * - Le croisement :
+		 * - La mutation :
 		 * 
 		 * 
 		 * 
@@ -36,43 +39,34 @@ namespace LieuxDeFormation
             // Set current thread culture to en - US.
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
 
-
-            City c1 = new City ();
-			City c2 = new City ();
-
+			Console.WriteLine("LOADING AGENCIES AND CITIES ...");
+			List<Agency> agencies = loadAgencies();
 			List<City> cities = loadCities();
 
-			foreach (City c in cities) {
-//				rainbowprintLine (c.ToString(), "rainbow", 5);
-
-//				coolRandPrint (c.ToString());
-				if (c.getId() == "lyon")
-					c1 = c;
-				if (c.getId() == "paris")
-					c2 = c;
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("AGENCIES :");
+			foreach (Agency a in agencies) {
+				Console.WriteLine(a);
 			}
 
-//			rainbowprintLine (c1.ToString(), "rainbow", 5);
-//			rainbowprintLine (c2.ToString(), "rainbow", 5);
-//			rainbowprintLine (c1.distanceTo (c2).ToString(), "rainbow", 5);
-//			rainbowprintLine ("END", "rainbow", 5);
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("CITIES :");
+			foreach (City c in cities) {
+				Console.WriteLine(c);
+			}
 
-			coolRandPrint (c1.ToString());
-			coolRandPrint (c2.ToString());
-			coolRandPrint (c1.distanceTo (c2).ToString());
-			coolRandPrint ("END");
-
-			//Console.ForegroundColor = Console.ForegroundColor;
-
-			//Console.ForegroundColor = ConsoleColor.White;
-			coolRandPrint("This is the test of a cool random print.");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("END");
             Console.ReadKey(true);
         }
 
 		public static List<City> loadCities()
 		{
-			List<City> cities = new List<City> ();
-			StreamReader fs = new StreamReader ("../../LieuxPossibles.txt");
+			List<City> cities = new List<City>();
+			StreamReader fs = new StreamReader(citiesFile);
 
 			String line = fs.ReadLine();
 
@@ -81,20 +75,50 @@ namespace LieuxDeFormation
 				cities.Add(new City(line));
 			}
 
-			fs.Close ();
+			fs.Close();
 
 			return cities;
 		}
 
-
-		public static bool IsLinux
+		public static List<Agency> loadAgencies()
 		{
-			get
+			List<Agency> agencies = new List<Agency>();
+			StreamReader fs = new StreamReader(agenciesFile);
+
+			String line = fs.ReadLine();
+
+			while((line = fs.ReadLine()) != null)
 			{
-				int p = (int) Environment.OSVersion.Platform;
-				return (p == 4) || (p == 6) || (p == 128);
+				agencies.Add(new Agency(line));
 			}
+
+			fs.Close();
+
+			return agencies;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		public static void rainbowprintLine(string s, string style = "random", int cycle = 1)
 		{
