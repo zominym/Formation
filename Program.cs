@@ -61,7 +61,11 @@ namespace LieuxDeFormation
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("TESTS :");
-			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies.ToArray());
+
+			List<Agency> agencies2 = new List<Agency>();
+			for (int i = 0; i < agencies.Count(); i++)
+				agencies2.Add(agencies[(i + 5) % agencies.Count()]);
+			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies2.ToArray());
 
 			Console.WriteLine("COST :");
 			Console.WriteLine(sol.cost());
