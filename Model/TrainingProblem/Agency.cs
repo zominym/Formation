@@ -15,6 +15,16 @@ namespace TrainingProblem
 		{
 			nbPers = csvLine.Split (';')[5];
 		}
+
+		public override string ToString ()
+		{
+			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;
+		}
+
+		public int getNbPers()
+		{
+			return nbPers;
+		}
 	}
 }
 
