@@ -39,6 +39,7 @@ namespace LieuxDeFormation
 		{
             // Set current thread culture to en - US.
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+			//Console.ForegroundColor = ConsoleColor.White;
 
 			Console.WriteLine("LOADING AGENCIES AND CITIES ...");
 			List<Agency> agencies = loadAgencies();
@@ -66,6 +67,7 @@ namespace LieuxDeFormation
 			for (int i = 0; i < agencies.Count(); i++)
 				agencies2.Add(agencies[(i + 5) % agencies.Count()]);
 			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies2.ToArray());
+			Console.WriteLine(sol);
 
 			Console.WriteLine("COST :");
 			Console.WriteLine(sol.cost());

@@ -76,14 +76,15 @@ namespace Metaheuristic
             
             return tripFee + agenciesFee;
         }
-
-        public string toString(){
+			
+        public override string ToString(){
             string str = "";
             for (int i = 0; i < Agencies.Length; i++)
             {
-                str += Agencies[i].ToString;
-                str += "\n";
-                str += Cities[i].ToString;
+				str += "AGENCY " + i + " " + Agencies[i].getName();
+                str += " ---> ";
+				str += "CITY " + i +  " " + Cities[i].getName();
+				str += "\n";
             }
 
             return str;
