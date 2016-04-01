@@ -9,6 +9,7 @@ namespace Metaheuristic
         const double transportFee = 0.4;
         const int agencyFee = 3000;
 
+		private double _cost = -1;
         private Agency[] _agencies;
         private City[] _cities;
         private List<Solution> _neighbors = null;
@@ -21,7 +22,7 @@ namespace Metaheuristic
         public List<Solution> Neighbors
         {
             get { 
-                if (_neighbors == null)
+				if (_neighbors == null)
                     buildNeighborhood();
                 return _neighbors;
             }
@@ -36,6 +37,14 @@ namespace Metaheuristic
         {
             get { return _cities; }
         }
+
+		public double Cost {
+			get { 
+				if (_cost == -1)
+					_cost = calculateCost();
+				return _cost;
+			}
+		}
             
         private void buildNeighborhood()
         {
@@ -55,15 +64,17 @@ namespace Metaheuristic
             City tmp = this.Cities[a];
             this.Cities[a] = this.Cities[b];
             this.Cities[b] = tmp;
+			_cost = -1;
 		}
 
 		public void mutate(City[] cities)
 		{   
 			Random rand = new Random();
 			_cities[rand.Next(_cities.Length)] = cities[rand.Next(cities.Length)];
+			_cost = -1;
 		}
 
-        public double cost()
+        private double calculateCost()
         {
             double tripFee = 0;
             double agenciesFee = 0;
@@ -91,11 +102,11 @@ namespace Metaheuristic
             return best;
         }
 
-        public Solution getBestNeighbor(Solution s)
+        public Solution getBestNeighbor()
         {
-            Solution best = s;
+            Solution best = this;
             foreach (Solution neighbor in Neighbors)
-                if (neighbor.cost() < best.cost())
+                if (neighbor.Cost < best.Cost)
                     best = neighbor;
             return best;
         }

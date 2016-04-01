@@ -73,7 +73,7 @@ namespace LieuxDeFormation
 			Console.WriteLine(sol);
 
 			Console.WriteLine("COST :");
-			Console.WriteLine(sol.cost());
+			Console.WriteLine(sol.Cost);
 
 			Console.WriteLine("MUTATING ...");
 			sol.mutate(cities.ToArray());
@@ -82,7 +82,16 @@ namespace LieuxDeFormation
 			Console.WriteLine(sol);
 
 			Console.WriteLine("COST :");
-			Console.WriteLine(sol.cost());
+			Console.WriteLine(sol.Cost);
+
+			Console.WriteLine("GRADIENT DESCENT ...");
+			Solution betterSol = sol.getGradientDescendSolution();
+
+			Console.WriteLine("SOL :");
+			Console.WriteLine(betterSol);
+
+			Console.WriteLine("COST :");
+			Console.WriteLine(betterSol.Cost);
 
 			Console.WriteLine();
 			Console.WriteLine();
