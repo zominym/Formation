@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using TrainingProblem;
+using Metaheuristic;
 
 namespace LieuxDeFormation
 {
@@ -56,6 +57,15 @@ namespace LieuxDeFormation
 			foreach (City c in cities) {
 				Console.WriteLine(c);
 			}
+
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("TESTS :");
+			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies.ToArray());
+
+			Console.WriteLine("COST :");
+			Console.WriteLine(sol.cost());
+
 
 			Console.WriteLine();
 			Console.WriteLine();
