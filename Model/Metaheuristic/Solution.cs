@@ -77,6 +77,27 @@ namespace Metaheuristic
             return tripFee + agenciesFee;
         }
 
+        public Solution getGradientDescendSolution()
+        {
+            Solution best = this, tmp;
+            bool isClimbing;
+            while (!isClimbing)
+            {
+                tmp = best.getBestNeighbor();
+                if (tmp == best)
+                    return best;
+            }
+        }
+
+        public Solution getBestNeighbor(Solution s)
+        {
+            Solution best = s;
+            foreach (Solution neighbor in Neighbors)
+                if (neighbor.cost() > best.cost())
+                    best = neighbor;
+            return best;
+        }
+
         public string toString(){
             string str = "";
             for (int i = 0; i < Agencies.Length; i++)
@@ -85,7 +106,6 @@ namespace Metaheuristic
                 str += "\n";
                 str += Cities[i].ToString;
             }
-
             return str;
         }
     }
