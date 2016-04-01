@@ -5,13 +5,13 @@ namespace TrainingProblem
 	public class City
 	{
 
-		private String id;
-		private String name;
-		private String codepostal;
-		private double longitude;
-		private double latitude;
+		protected String id;
+		protected String name;
+		protected String codepostal;
+		protected double longitude;
+		protected double latitude;
 
-		public City () : this ("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
+		public City () : this("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
 			// NOTHING
 		}
 
@@ -55,8 +55,16 @@ namespace TrainingProblem
 			return (rad / Math.PI * 180.0);
 		}
 
-		public String getId() {
+		public string getId() {
 			return id;
+		}
+
+		public string getName() {
+			return name;
+		}
+
+		public string getCodePostal() {
+			return codepostal;
 		}
 	}
 }
