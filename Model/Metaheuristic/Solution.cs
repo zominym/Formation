@@ -6,6 +6,8 @@ namespace Metaheuristic
 {
     public class Solution
     {
+        const double transportFee = 0.4;
+        const int agencyFee = 3000;
 
         private Dictionary<Agency, City> _value;
         private List<Solution> _neighbors;
@@ -29,6 +31,25 @@ namespace Metaheuristic
         private void buildNeighborhood()
         {
             //TODO
+        }
+
+        public double cost()
+        {
+            double tripFee = 0;
+            double agenciesFee = 0;
+            List<City> centers = new List<City>();
+
+            foreach(Agency a in this._value.Keys)
+            {
+                City c = this._value[a];
+                tripFee += a.distanceTo(c) * transportFee * a.getNbPers();
+                if(!centers.Contains(c))
+                {
+                    agenciesFee += agencyFee;
+                    centers.Add(c);
+                }
+            }
+            return tripFee + agenciesFee;
         }
     }
 }
