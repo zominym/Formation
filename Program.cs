@@ -17,6 +17,7 @@ namespace LieuxDeFormation
 		const string citiesFile = "../../LieuxPossiblesTEST.txt";
 		const string agenciesFile = "../../ListeAgences_TEST.txt";
 
+
 		// BROUILLON
 		/*
 		 * 
@@ -63,20 +64,25 @@ namespace LieuxDeFormation
 			Console.WriteLine();
 			Console.WriteLine("TESTS :");
 
-			List<Agency> agencies2 = new List<Agency>();
+			List<City> cities2 = new List<City>();
 			for (int i = 0; i < agencies.Count(); i++)
-				agencies2.Add(agencies[(0) % agencies.Count()]);
-			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies2.ToArray());
+				cities2.Add(agencies[(i + 5) % agencies.Count()].toCity());
+			Solution sol = new Solution(agencies.ToArray(), cities2.ToArray());
+
+			Console.WriteLine("SOL :");
 			Console.WriteLine(sol);
-			Console.WriteLine(agencies[1].distanceTo(agencies[0]));
-			Console.WriteLine(agencies[2].distanceTo(agencies[0]));
-			Console.WriteLine(agencies[3].distanceTo(agencies[0]));
-			Console.WriteLine(agencies[4].distanceTo(agencies[0]));
-			Console.WriteLine(agencies[5].distanceTo(agencies[0]));
 
 			Console.WriteLine("COST :");
 			Console.WriteLine(sol.cost());
 
+			Console.WriteLine("MUTATING ...");
+			sol.mutate(cities.ToArray());
+
+			Console.WriteLine("SOL :");
+			Console.WriteLine(sol);
+
+			Console.WriteLine("COST :");
+			Console.WriteLine(sol.cost());
 
 			Console.WriteLine();
 			Console.WriteLine();
@@ -117,14 +123,6 @@ namespace LieuxDeFormation
 
 			return agencies;
 		}
-
-        public Solution mutation(Solution s, City[] cities)
-        {   
-            Random rand = new Random();
-            City[] mutant = s.Cities;
-            mutant[rand.Next(mutant.Length)] = cities[rand.Next(cities.Length)];
-            return new Solution(s.Agencies, mutant);
-        }
 
 
 

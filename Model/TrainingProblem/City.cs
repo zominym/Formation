@@ -5,9 +5,9 @@ namespace TrainingProblem
 	public class City
 	{
 
-		protected String id;
-		protected String name;
-		protected String codepostal;
+		protected string id;
+		protected string name;
+		protected string codepostal;
 		protected double longitude;
 		protected double latitude;
 
@@ -15,16 +15,25 @@ namespace TrainingProblem
 			// NOTHING
 		}
 
-		public City (String csvLine){
+		public City (string csvLine){
 			// "id";"nom";"codepostal";"longitude";"latitude"
 
-            String[] csvTab = csvLine.Replace ("\"", "").Split (';');
+            string[] csvTab = csvLine.Replace ("\"", "").Split (';');
 			id = csvTab [0];
 			name = csvTab [1];
 			codepostal = csvTab [2];
             longitude = Double.Parse(csvTab[3]);
             latitude = Double.Parse(csvTab[4]);
 						
+		}
+
+		public City(string _id, string _name, string _codepostal, double _longitude, double _latitude){
+			// "id";"nom";"codepostal";"longitude";"latitude"
+			id = _id;
+			name = _name;
+			codepostal = _codepostal;
+			longitude = _longitude;
+			latitude = _latitude;
 		}
 
 		public override string ToString ()

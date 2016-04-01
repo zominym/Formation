@@ -54,8 +54,14 @@ namespace Metaheuristic
         private void swap(int a, int b){
             City tmp = this.Cities[a];
             this.Cities[a] = this.Cities[b];
-            this.Cities[b] = this.Cities[a];
-        }
+            this.Cities[b] = tmp;
+		}
+
+		public void mutate(City[] cities)
+		{   
+			Random rand = new Random();
+			_cities[rand.Next(_cities.Length)] = cities[rand.Next(cities.Length)];
+		}
 
         public double cost()
         {
@@ -81,9 +87,9 @@ namespace Metaheuristic
             string str = "";
             for (int i = 0; i < Agencies.Length; i++)
             {
-				str += "AGENCY " + i + " " + Agencies[i].getName();
+				str += "AGENCY " + " " + Agencies[i].getId();
                 str += " ---> ";
-				str += "CITY " + i +  " " + Cities[i].getName();
+				str += "CITY " + " " + Cities[i].getId();
 				str += "\n";
             }
 

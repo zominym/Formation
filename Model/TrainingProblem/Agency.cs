@@ -25,6 +25,11 @@ namespace TrainingProblem
 		{
 			return nbPers;
 		}
+
+		public City toCity()
+		{
+			return new City(id, name, codepostal, longitude, latitude);
+		}
 	}
 }
 
