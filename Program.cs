@@ -65,9 +65,14 @@ namespace LieuxDeFormation
 
 			List<Agency> agencies2 = new List<Agency>();
 			for (int i = 0; i < agencies.Count(); i++)
-				agencies2.Add(agencies[(i + 5) % agencies.Count()]);
+				agencies2.Add(agencies[(0) % agencies.Count()]);
 			Solution sol = new Solution(agencies.ToArray(), (City[]) agencies2.ToArray());
 			Console.WriteLine(sol);
+			Console.WriteLine(agencies[1].distanceTo(agencies[0]));
+			Console.WriteLine(agencies[2].distanceTo(agencies[0]));
+			Console.WriteLine(agencies[3].distanceTo(agencies[0]));
+			Console.WriteLine(agencies[4].distanceTo(agencies[0]));
+			Console.WriteLine(agencies[5].distanceTo(agencies[0]));
 
 			Console.WriteLine("COST :");
 			Console.WriteLine(sol.cost());
