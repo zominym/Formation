@@ -107,6 +107,13 @@ namespace LieuxDeFormation
 			return agencies;
 		}
 
+        public Solution mutation(Solution s, City[] cities)
+        {   
+            Random rand = new Random();
+            City[] mutant = s.Cities;
+            mutant[rand.Next(mutant.Length)] = cities[rand.Next(cities.Length)];
+            return new Solution(s.Agencies, mutant);
+        }
 
 
 
@@ -129,8 +136,7 @@ namespace LieuxDeFormation
 
 
 
-
-		public static void rainbowprintLine(string s, string style = "random", int cycle = 1)
+        public static void rainbowprintLine(string s, string style = "random", int cycle = 1)
 		{
 			rainbowprint (s + "\n", style, cycle);
 		}
