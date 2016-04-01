@@ -11,7 +11,7 @@ namespace TrainingProblem
 		private double longitude;
 		private double latitude;
 
-		public City () : this ("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
+		public City () : this("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
 			// NOTHING
 		}
 
