@@ -32,7 +32,7 @@ namespace Metaheuristic
             get { return _agencies; }
         }
 
-        public City Cities
+        public City[] Cities
         {
             get { return _cities; }
         }
@@ -63,16 +63,17 @@ namespace Metaheuristic
             double agenciesFee = 0;
             List<City> centers = new List<City>();
 
-            foreach(Agency a in this._value.Keys)
+            for(int i = 0; i < Agencies.Length; i++)
             {
-                City c = this._value[a];
-                tripFee += a.distanceTo(c) * transportFee * a.getNbPers();
-                if(!centers.Contains(c))
+                City c = Cities[i];
+                tripFee += Agencies[i].distanceTo(c) * transportFee * Agencies[i].getNbPers();
+                if (!centers.Contains(c))
                 {
                     agenciesFee += agencyFee;
                     centers.Add(c);
                 }
             }
+            
             return tripFee + agenciesFee;
         }
     }
