@@ -80,20 +80,16 @@ namespace Metaheuristic
         public Solution getGradientDescendSolution()
         {
             Solution best = this, tmp;
-            bool isClimbing;
-            while (!isClimbing)
-            {
-                tmp = best.getBestNeighbor();
-                if (tmp == best)
-                    return best;
-            }
+            while ((tmp = best.getBestNeighbor()) != best)
+                best = tmp;
+            return best;
         }
 
         public Solution getBestNeighbor(Solution s)
         {
             Solution best = s;
             foreach (Solution neighbor in Neighbors)
-                if (neighbor.cost() > best.cost())
+                if (neighbor.cost() < best.cost())
                     best = neighbor;
             return best;
         }
