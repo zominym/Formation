@@ -74,7 +74,8 @@ namespace Metaheuristic
 
 		public Solution (Solution s) {
 			_cost = s.Cost;
-			_tuples = s._tuples;
+			for (int i = 0; i < _tuples.Length; i++)
+				_tuples[i] = new Tuple<Agency, City>(s._tuples[i].Item1, new City(s._tuples[i].Item2));
             _cities = new List<City>();
             foreach (City c in s._cities)
                 _cities.Add(new City(c));
@@ -133,7 +134,7 @@ namespace Metaheuristic
 		}
 
 		public Solution mutate(){   
-            List<City> cities = MainClass.getCities();
+            /*List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
 			bool loop = true;
 			do {
@@ -147,7 +148,8 @@ namespace Metaheuristic
 				if (temp._tuples[idx].Item2.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
-			return temp;
+			return temp;*/
+            return new Solution();
 		}
 
         public Solution crossover(Solution y)
@@ -161,14 +163,29 @@ namespace Metaheuristic
 				temp._cities = new List<City>();              
 
 				int i = 0;
+//				Console.WriteLine("CROSSOVER");
 				foreach (Agency a in MainClass.getAgencies()) {
-					City c = new City((rand.NextDouble() < 0.5) ? this._tuples[i].Item2 : y._tuples[i].Item2);
+
+//					Console.WriteLine("PARENT 1 : ");
+//					Console.WriteLine(this._tuples[i].Item2);
+//					Console.WriteLine("PARENT 2 : ");
+//					Console.WriteLine(y._tuples[i].Item2);
+					City c;
+					if (rand.NextDouble() < 0.5) {
+//						Console.WriteLine("SELECTED PARENT 1");
+						c = new City(this._tuples[i].Item2);
+					}
+					else {
+//						Console.WriteLine("SELECTED PARENT 2");
+						c = new City(y._tuples[i].Item2);
+					}
 					City cp = temp.retrieve(c);
 					if (cp != null)
 						c = cp;
 					else
 						temp._cities.Add(c);
 					temp._tuples[i] = new Tuple<Agency, City>(a, c);
+
 					i++;
 				}
 				temp.updateCities();

@@ -53,6 +53,8 @@ namespace LieuxDeFormation
 
 
             Genetic algo = new Genetic(agencies, cities, 1000, 100);
+
+
             Console.WriteLine(algo.getSolution());
 
 //			Console.WriteLine();

@@ -10,7 +10,6 @@ namespace Metaheuristic
     {
         //private List<Agency> _agencies;
         private List<City> _cities;
-        private List<Solution> _population;
         private int _iterations, _populationSize;
 		private static Random rand = LieuxDeFormation.MainClass.rand;
 
@@ -33,21 +32,14 @@ namespace Metaheuristic
             get { return _iterations; }
         }
 
-        List<Solution> Population {
-            get {
-                if (_population == null)
-                    buildPopulation();
-                return _population;
-            }
-        }
-
-        public void buildPopulation() {
-            _population = new List<Solution>();
+        public List<Solution> buildPopulation() {
+            List<Solution> population;
+            population = new List<Solution>();
             for (int i = 0; i < PopulationSize; i++)
             {
-                _population.Add(new Solution());
+                population.Add(new Solution());
             }
-            Console.WriteLine(_population.Count);
+            return population;
         }
 
         public Solution getBestSolution(List<Solution> population){
@@ -95,9 +87,9 @@ namespace Metaheuristic
         }
 
         public Solution getSolution(){
-            double ProbaCross = 0.9;
-            buildPopulation();
-            List<Solution> nextPopulation, tmp, currentPopulation = Population;
+            double ProbaCross = 0.5;
+            List<Solution> nextPopulation, tmp, currentPopulation = buildPopulation();
+            Solution bestSolution = getBestSolution(currentPopulation);
             for (int i = 0; i < Iterations; i++) {
 				if (i % 10 == 0)
                 	Console.Write(" ITE "+i);
@@ -105,28 +97,25 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
 					if (ProbaCross > rand.NextDouble()) {
-						if (i % 100 == 0) {
-							int rand1 = rand.Next(tmp.Count);
-							int rand2 = rand.Next(tmp.Count);
-							Solution s = tmp[rand1].crossover(tmp[rand2]);
-							nextPopulation.Add(s);
-							Console.WriteLine(tmp[rand1].toStringShort());
-							Console.WriteLine(tmp[rand2].toStringShort());
-							Console.WriteLine(s.toStringShort());
-						}
+						int rand1 = rand.Next(tmp.Count);
+						int rand2 = rand.Next(tmp.Count);
+						Solution s = tmp[rand1].crossover(tmp[rand2]);
+						nextPopulation.Add(s);
 					}
                     else
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
 				if (i % 100 == 0) {
-					foreach (Solution s in Population)
+					foreach (Solution s in currentPopulation)
 						Console.WriteLine(s.Cost);
 
 					Console.WriteLine(getBestSolution(currentPopulation).Cost);
 				}
+                if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)
+                    bestSolution = getBestSolution(currentPopulation);
             }
-            return getBestSolution(currentPopulation).getGradientDescendSolution();
+            return bestSolution.getGradientDescendSolution();
         }
     }
 }
