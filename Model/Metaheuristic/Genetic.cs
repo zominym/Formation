@@ -77,6 +77,7 @@ namespace Metaheuristic
             for (int i = 0; i < nbToTake; ++i) {
                 double pick = rand.NextDouble() * totalCost;
                 for (int j = 0; j < poids.Count; j++) {
+                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
                         break;
@@ -97,9 +98,9 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(nextPopulation.ElementAt(j).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
+                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
                     else
-                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate());
+                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
                 }
                 currentPopulation = nextPopulation; 
             }
