@@ -82,6 +82,7 @@ namespace Metaheuristic
                     Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
+						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
                         break;
                     }
                     else
