@@ -2,6 +2,7 @@
 using TrainingProblem;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Metaheuristic
 {
@@ -11,7 +12,7 @@ namespace Metaheuristic
         private List<City> _cities;
         private List<Solution> _population;
         private int _iterations, _populationSize;
-        private static Random rand = new Random();
+		private static Random rand = LieuxDeFormation.MainClass.rand;
 
         public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
             //_agencies = agencies;
@@ -103,9 +104,9 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(tmp.ElementAt(rand.Next(tmp.Count))));
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].crossover(tmp[rand.Next(tmp.Count)]));
                     else
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
             }

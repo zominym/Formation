@@ -15,7 +15,7 @@ namespace Metaheuristic
 		private List<City> _cities = new List<City>();
         private List<Solution> _neighbors = null;
 		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
-		private Random rand = new Random();
+		private Random rand = LieuxDeFormation.MainClass.rand;
 
 		// Constructeur de solution aléatoire
 		public Solution() {
@@ -152,7 +152,8 @@ namespace Metaheuristic
 
         public Solution crossover(Solution y)
 		{
-			Console.WriteLine("Debut du crossover");
+			//TODO crossover renvoie parfois des solutions avec des villes ayant plus de 100 personnes !!!!!!
+//			Console.WriteLine("Debut du crossover");
 			Solution temp;
 			bool loop = true;
 			do {
@@ -175,10 +176,10 @@ namespace Metaheuristic
 					loop = false;
 //					Console.WriteLine(temp);
 				}
-				Console.WriteLine(temp.toStringShort());
 			} while (loop);
-            
-			Console.WriteLine("Fin du crossover");
+
+//			Console.WriteLine(temp.toStringShort());
+//			Console.WriteLine("Fin du crossover");
             return temp;
         }
 
@@ -265,6 +266,7 @@ namespace Metaheuristic
 				str += "CITY " + " " + _tuples[i].Item2.getId();
 				str += "\n";
             }
+			str += "COST : " + Cost;
             return str;
         }
     }
