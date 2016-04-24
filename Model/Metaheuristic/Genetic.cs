@@ -111,9 +111,13 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
+<<<<<<< HEAD
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].crossover(tmp[rand.Next(tmp.Count)]));
+=======
                         nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(tmp.ElementAt(rand.Next(tmp.Count))));
+>>>>>>> 21fafe91bf06f44ca82a2c4dc38c923bb742657f
                     else
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
             }
