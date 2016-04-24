@@ -186,6 +186,14 @@ namespace Metaheuristic
 
 		}
 
+        public Boolean validateCities()
+        {
+            foreach (City c in _cities)
+                if (c.getNbPers() > CITYCAPACITY)
+                    return false;
+            return true;
+        }
+
 		public City retrieve(City c)
 		{
 			City ret = null;
