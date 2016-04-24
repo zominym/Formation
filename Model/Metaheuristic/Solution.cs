@@ -66,7 +66,7 @@ namespace Metaheuristic
 						refus++;
 					}
 				} while (loop);
-				_tuples = _tuples + Tuple.Create(a, c);
+				_tuples += Tuple.Create(a, c);
 				c.setNbPers(c.getNbPers() + a.getNbPers());
 			}
 
@@ -75,7 +75,9 @@ namespace Metaheuristic
 		public Solution (Solution s) {
 			_cost = s.Cost;
 			_tuples = s._tuples;
-			_cities = s.Cities;
+            _cities = new List<City>();
+            foreach (City c in s._cities)
+                _cities.Add(new City(c));
 			_neighbors = s._neighbors;
 		}
 
@@ -147,6 +149,27 @@ namespace Metaheuristic
 			} while (loop);
 			return temp;
 		}
+
+        public Solution crossover(Solution y)
+        {
+            Solution temp = new Solution(this);
+            Random rand = new Random();
+            temp._cities = new List<City>();
+             
+            foreach (City city in MainClass.getCities())
+                temp._cities.Add(new City(city));
+
+            int i = 0;
+            foreach (Agency a in MainClass.getAgencies())
+            {
+                City c = new City((rand.NextDouble() < 0.5) ? this._tuples[i].Item2 : y._tuples[i].Item2);
+                temp._tuples[i] = new Tuple<Agency, City>(a, c);
+
+                i++;
+            }
+                   
+            return temp;
+        }
 
         private double calculateCost()
         {
