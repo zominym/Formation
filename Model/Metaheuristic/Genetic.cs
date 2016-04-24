@@ -62,8 +62,11 @@ namespace Metaheuristic
             List<Solution> result = new List<Solution>();
 
             //Take the best solution
-            population.OrderBy(x => x.Cost);
-            Solution max = population.ElementAt(population.Count - 1);
+            Solution max = population.First();
+            foreach (Solution solution in population) {
+                if (max.Cost < solution.Cost)
+                    max = solution;
+            }
 
 
 
@@ -72,7 +75,6 @@ namespace Metaheuristic
                 poids.Add(max.Cost - solution.Cost);
                 totalCost += (max.Cost - solution.Cost);
             }
-
 
             for (int i = 0; i < nbToTake; ++i) {
                 double pick = rand.NextDouble() * totalCost;
@@ -94,7 +96,7 @@ namespace Metaheuristic
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count);
+                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
@@ -102,7 +104,8 @@ namespace Metaheuristic
                     else
                         nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
                 }
-                currentPopulation = nextPopulation; 
+                currentPopulation = nextPopulation;
+                Console.WriteLine("CURRENT-POP: " + currentPopulation);
             }
             return getBestSolution(currentPopulation).getGradientDescendSolution();
         }
