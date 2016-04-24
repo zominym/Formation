@@ -180,6 +180,9 @@ namespace Metaheuristic
 
 		public void updateCities()
 		{
+			for (int i = 0; i < _tuples.Length; i++) {
+				_tuples[i].Item2.setNbPers(_tuples[i].Item2.getNbPers() + _tuples[i].Item1.getNbPers());
+			}
 
 		}
 
