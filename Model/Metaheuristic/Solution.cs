@@ -9,18 +9,34 @@ namespace Metaheuristic
     {
 		double TRANSPORTFEE = 0.4;
 		int AGENCYFEE = 3000;
+		const int CITYCAPACITY = 60;
 
 		private double _cost = -1;
 		private List<City> _cities = new List<City>();
         private List<Solution> _neighbors = null;
-		private Tuple<Agency, City>[] _tuples;
+		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 
 		// Constructeur de solution aléatoire
 		public Solution() {
-			_cities = new List<City>();
+            Random rand = new Random();
+            foreach (City city in MainClass.getCities())
+                _cities.Add(new City(city));
+            int tirage, capacityRequired, i = 0;
+            foreach(Agency a in MainClass.getAgencies())
+            {
+                do
+                {
+                    tirage = rand.Next(_cities.Count);
+                    capacityRequired = a.getNbPers() + _cities[tirage].getNbPers();
+                } while (capacityRequired <= CITYCAPACITY);
 
+                _cities[tirage].setNbPers(capacityRequired);
 
+                _tuples[i] = new Tuple<Agency, City>(a, _cities[tirage]);
 
+                i++;
+            }
+           
         }
 
 		// Constructeur de solution aléatoire avec distance maximum entre deux villes
@@ -42,7 +58,7 @@ namespace Metaheuristic
 						distanceMax += increment;
 					}
 
-					if (c.getNbPers() + a.getNbPers() <= 60)
+					if (c.getNbPers() + a.getNbPers() <= CITYCAPACITY)
 						loop = false;
 
 					if (a.distanceTo(c) > distanceMax) {
@@ -109,7 +125,7 @@ namespace Metaheuristic
 			temp._tuples[a].Item2.setNbPers(temp._tuples[a].Item2.getNbPers() + temp._tuples[a].Item1.getNbPers() - temp._tuples[b].Item1.getNbPers());
 			temp._tuples[b].Item2.setNbPers(temp._tuples[b].Item2.getNbPers() + temp._tuples[b].Item1.getNbPers() - temp._tuples[a].Item1.getNbPers());
 
-			if (temp._tuples[a].Item2.getNbPers() > 60 || temp._tuples[b].Item2.getNbPers() > 60)
+			if (temp._tuples[a].Item2.getNbPers() > CITYCAPACITY || temp._tuples[b].Item2.getNbPers() > CITYCAPACITY)
 				return null;
 			return temp;
 		}
@@ -126,7 +142,7 @@ namespace Metaheuristic
 				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() + temp._tuples[idx].Item1.getNbPers());
 				temp._cost = -1;
 
-				if (temp._tuples[idx].Item2.getNbPers() <= 60)
+				if (temp._tuples[idx].Item2.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
 			return temp;
