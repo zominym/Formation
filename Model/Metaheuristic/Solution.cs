@@ -14,10 +14,40 @@ namespace Metaheuristic
         private City[] _cities;
         private List<Solution> _neighbors = null;
 
-        public Solution(Agency[] agencies, City[] cities){
-            _agencies = agencies;
-            _cities = cities;
+
+		// Constructeur de solution aléatoire
+		public Solution() {
+			_agencies = new List<Agency>();
+			_cities = new List<City>();
+
+
+
         }
+
+		// Constructeur de solution aléatoire avec distance maximum entre deux villes
+		public Solution(int distanceMax) {
+			_agencies = new List<Agency>();
+			_cities = new List<City>();
+
+
+
+		}
+
+		// Constructeur de solution prenant la ville la plus proche (disponible) de chaque agence
+		public Solution(int distanceMax) {
+			_agencies = new List<Agency>();
+			_cities = new List<City>();
+
+
+
+		}
+
+		public Solution (Solution s) {
+			_cost = s.Cost;
+			_agencies = s.Agencies;
+			_cities = s.Cities;
+			_neighbors = s._neighbors;
+		}
 
         public List<Solution> Neighbors
         {
@@ -53,25 +83,27 @@ namespace Metaheuristic
             {
                 for (int j = i + 1; j < Agencies.Length; j++) 
                 {
-                    Solution tmp = new Solution(Agencies, Cities);
-                    tmp.swap(i, j);
+                    Solution tmp = swap(i, j);
                     _neighbors.Add(tmp);
                 }
             }
         }
 
-        private void swap(int a, int b){
-            City tmp = this.Cities[a];
-            this.Cities[a] = this.Cities[b];
-            this.Cities[b] = tmp;
-			_cost = -1;
+		private Solution swap(int a, int b){
+			Solution temp = new Solution(this);
+			City tmp = temp.Cities[a];
+			temp.Cities[a] = temp.Cities[b];
+			temp.Cities[b] = tmp;
+			temp._cost = -1;
+			return temp;
 		}
 
-		public void mutate(City[] cities)
-		{   
+		public Solution mutate(City[] cities){   
+			Solution temp = new Solution(this);
 			Random rand = new Random();
-			_cities[rand.Next(_cities.Length)] = cities[rand.Next(cities.Length)];
-			_cost = -1;
+			temp._cities[rand.Next(_cities.Length)] = cities[rand.Next(cities.Length)];
+			temp._cost = -1;
+			return temp;
 		}
 
         private double calculateCost()

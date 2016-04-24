@@ -4,11 +4,10 @@ namespace TrainingProblem
 {
 	public class Agency : City
 	{
-		private int nbPers;
 
 		public Agency() : base()
 		{
-			nbPers = 0;
+
 		}
 
 		public Agency(string csvLine) : base(csvLine)
@@ -19,16 +18,6 @@ namespace TrainingProblem
 		public override string ToString ()
 		{
 			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;
-		}
-
-		public int getNbPers()
-		{
-			return nbPers;
-		}
-
-		public City toCity()
-		{
-			return new City(id, name, codepostal, longitude, latitude);
 		}
 	}
 }

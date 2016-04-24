@@ -17,6 +17,9 @@ namespace LieuxDeFormation
 		const string citiesFile = "../../LieuxPossiblesTEST.txt";
 		const string agenciesFile = "../../ListeAgences_TEST.txt";
 
+		static List<Agency> agencies;
+		static List<City> cities;
+
 
 		// BROUILLON
 		/*
@@ -43,8 +46,8 @@ namespace LieuxDeFormation
 			//Console.ForegroundColor = ConsoleColor.White;
 
 			Console.WriteLine("LOADING AGENCIES AND CITIES ...");
-			List<Agency> agencies = loadAgencies();
-			List<City> cities = loadCities();
+			agencies = loadAgencies();
+			cities = loadCities();
 
 			Console.WriteLine();
 			Console.WriteLine();
@@ -134,7 +137,13 @@ namespace LieuxDeFormation
 		}
 
 
+		public static List<Agency> getAgencies() {
+			return agencies;
+		}
 
+		public static List<City> getCities() {
+			return cities;
+		}
 
 
 
