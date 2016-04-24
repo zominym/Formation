@@ -7,14 +7,14 @@ namespace Metaheuristic
 {
     public class Genetic
     {
-        private List<Agency> _agencies;
+        //private List<Agency> _agencies;
         private List<City> _cities;
         private List<Solution> _population;
         private int _iterations, _populationSize;
         private static Random rand = new Random();
 
         public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
-            _agencies = agencies;
+            //_agencies = agencies;
             _cities = cities;
             _iterations = iterations;
             _populationSize = populationSize;
@@ -79,34 +79,49 @@ namespace Metaheuristic
             for (int i = 0; i < nbToTake; ++i) {
                 double pick = rand.NextDouble() * totalCost;
                 for (int j = 0; j < poids.Count; j++) {
-                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
+//                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
-						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
+//						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
                         break;
                     }
                     else
                         pick -= poids[j];
                 }
             }
+//			Console.WriteLine("RESULT -------------------------------------------------");
+//			foreach (Solution s in result)
+//				Console.WriteLine(s);
             return result;
         }
 
         public Solution getSolution(){
+//			Console.WriteLine("Debut getSolution()");
             double ProbaCross = 0.9;
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
+//				Console.WriteLine("Debut du for i, iteration : " + i + " sur " + Iterations);
                 nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
+//				Console.WriteLine("POPULATION -------------------------------------------------");
+//				foreach (Solution s in nextPopulation)
+//					Console.WriteLine(s);
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
-                    if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
-                    else
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
+//					Console.WriteLine("\tDebut du for j, iteration : " + j + " sur " + currentPopulation.Count);
+					if (ProbaCross > rand.NextDouble()) {
+//						Console.WriteLine("\t\tDebut du if");
+						Solution s = tmp.ElementAt(rand.Next(tmp.Count)).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count)));
+//						Console.WriteLine("\t\tMilieu du if");
+						nextPopulation.Add(s);
+//						Console.WriteLine("\t\tFin du if");
+					} else {
+//						Console.WriteLine("\t\tDebut du else");
+						nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
+					}
                 }
                 currentPopulation = nextPopulation;
-                Console.WriteLine("CURRENT-POP: " + currentPopulation);
+//                Console.WriteLine("CURRENT-POP: " + currentPopulation);
             }
             return getBestSolution(currentPopulation).getGradientDescendSolution();
         }
