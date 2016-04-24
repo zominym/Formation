@@ -154,6 +154,7 @@ namespace Metaheuristic
 
         public Solution crossover(Solution y)
 		{
+			Console.WriteLine("Debut du crossover");
 			Solution temp;
 			bool loop = true;
 			do {
@@ -173,15 +174,34 @@ namespace Metaheuristic
 					i++;
 				}
 				temp.updateCities();
-				if (temp.validateCities())
+				if (temp.validateCities()) {
 					loop = false;
+//					Console.WriteLine(temp);
+				}
+				Console.WriteLine(temp.toStringShort());
 			} while (loop);
-                   
+            
+			Console.WriteLine("Fin du crossover");
             return temp;
         }
 
+		public string toStringShort() {
+			string str = "";
+			for (int i = 0; i < _tuples.Length; i++)
+			{
+				str += " " + _tuples[i].Item2.getNbPers();
+			}
+			return str;
+		}
+
 		public void updateCities()
 		{
+			foreach (City c in _cities) {
+				c.setNbPers(0);
+			}
+			for (int i = 0; i < _tuples.Length; i++) {
+				_tuples[i].Item2.setNbPers(_tuples[i].Item2.getNbPers() + _tuples[i].Item1.getNbPers());
+			}
 
 		}
 
