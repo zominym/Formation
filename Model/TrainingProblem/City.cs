@@ -47,6 +47,11 @@ namespace TrainingProblem
 			nbPers = c.nbPers;
 		}
 
+		public override bool Equals(City c)
+		{
+			return c.id.Equals(this.id);
+		}
+
 		public override string ToString ()
 		{
 			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;

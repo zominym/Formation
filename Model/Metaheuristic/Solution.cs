@@ -151,25 +151,47 @@ namespace Metaheuristic
 		}
 
         public Solution crossover(Solution y)
-        {
-            Solution temp = new Solution(this);
-            Random rand = new Random();
-            temp._cities = new List<City>();
-             
-            foreach (City city in MainClass.getCities())
-                temp._cities.Add(new City(city));
+		{
+			Solution temp;
+			bool loop = true;
+			do {
+				temp = new Solution(this);
+				Random rand = new Random();
+				temp._cities = new List<City>();              
 
-            int i = 0;
-            foreach (Agency a in MainClass.getAgencies())
-            {
-                City c = new City((rand.NextDouble() < 0.5) ? this._tuples[i].Item2 : y._tuples[i].Item2);
-                temp._tuples[i] = new Tuple<Agency, City>(a, c);
-
-                i++;
-            }
+				int i = 0;
+				foreach (Agency a in MainClass.getAgencies()) {
+					City c = new City((rand.NextDouble() < 0.5) ? this._tuples[i].Item2 : y._tuples[i].Item2);
+					City cp = temp.retrieve(c);
+					if (cp != null)
+						c = cp;
+					else
+						temp._cities.Add(c);
+					temp._tuples[i] = new Tuple<Agency, City>(a, c);
+					i++;
+				}
+				temp.updateCities();
+				if (temp.validateCities())
+					loop = false;
+			} while (loop);
                    
             return temp;
         }
+
+		public void updateCities()
+		{
+
+		}
+
+		public City retrieve(City c)
+		{
+			City ret = null;
+			foreach (City city in _cities) {
+				if (city.Equals(c))
+					ret = c;
+			}
+			return ret;
+		}
 
         private double calculateCost()
         {
