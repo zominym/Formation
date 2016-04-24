@@ -183,15 +183,6 @@ namespace Metaheuristic
             return temp;
         }
 
-		public string toStringShort() {
-			string str = "";
-			for (int i = 0; i < _tuples.Length; i++)
-			{
-				str += " " + _tuples[i].Item2.getNbPers();
-			}
-			return str;
-		}
-
 		public void updateCities()
 		{
 			foreach (City c in _cities) {
@@ -268,6 +259,15 @@ namespace Metaheuristic
             }
 			str += "COST : " + Cost;
             return str;
-        }
+		}
+
+		public string toStringShort() {
+			string str = "";
+			for (int i = 0; i < _tuples.Length; i++)
+			{
+				str += " " + _tuples[i].Item2.getNbPers();
+			}
+			return str;
+		}
     }
 }

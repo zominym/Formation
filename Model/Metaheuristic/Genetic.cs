@@ -51,12 +51,12 @@ namespace Metaheuristic
         }
 
         public Solution getBestSolution(List<Solution> population){
-            Solution max = population.ElementAt(0);
+			Solution min = population.First();
             foreach (Solution solution in population) {
-                if (solution.Cost > max.Cost)
-                    max = solution;
+                if (solution.Cost < min.Cost)
+                    min = solution;
             }
-            return max;
+            return min;
         }
 
         public List<Solution> RouletteSelection(List<Solution> population, int nbToTake){
@@ -99,16 +99,32 @@ namespace Metaheuristic
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-                Console.WriteLine("ITE "+i);
-                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
+				if (i % 10 == 0)
+                	Console.Write(" ITE "+i);
+				nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count / 2);
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
-                    if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].crossover(tmp[rand.Next(tmp.Count)]));
+					if (ProbaCross > rand.NextDouble()) {
+						if (i % 100 == 0) {
+							int rand1 = rand.Next(tmp.Count);
+							int rand2 = rand.Next(tmp.Count);
+							Solution s = tmp[rand1].crossover(tmp[rand2]);
+							nextPopulation.Add(s);
+							Console.WriteLine(tmp[rand1].toStringShort());
+							Console.WriteLine(tmp[rand2].toStringShort());
+							Console.WriteLine(s.toStringShort());
+						}
+					}
                     else
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
+				if (i % 100 == 0) {
+					foreach (Solution s in Population)
+						Console.WriteLine(s.Cost);
+
+					Console.WriteLine(getBestSolution(currentPopulation).Cost);
+				}
             }
             return getBestSolution(currentPopulation).getGradientDescendSolution();
         }

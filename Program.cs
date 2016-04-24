@@ -52,7 +52,7 @@ namespace LieuxDeFormation
 			cities = loadCities();
 
 
-            Genetic algo = new Genetic(agencies, cities, 10, 10);
+            Genetic algo = new Genetic(agencies, cities, 1000, 100);
             Console.WriteLine(algo.getSolution());
 
 //			Console.WriteLine();
