@@ -28,7 +28,7 @@ namespace Metaheuristic
                 {
                     tirage = rand.Next(_cities.Count);
                     capacityRequired = a.getNbPers() + _cities[tirage].getNbPers();
-                } while (capacityRequired <= CITYCAPACITY);
+                } while (capacityRequired > CITYCAPACITY);
 
                 _cities[tirage].setNbPers(capacityRequired);
 

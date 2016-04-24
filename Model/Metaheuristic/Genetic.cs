@@ -93,13 +93,16 @@ namespace Metaheuristic
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count);
+                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
                 tmp = new List<Solution>(nextPopulation);
+                int foo = 0;
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(nextPopulation.ElementAt(j).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
+                        nextPopulation.Add(tmp.ElementAt(foo).crossover(tmp.ElementAt(rand.Next(tmp.Count))));
                     else
-                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate());
+                        nextPopulation.Add(tmp.ElementAt(foo).mutate());
+                    if (foo < nextPopulation.Count)
+                        foo++;
                 }
                 currentPopulation = nextPopulation; 
             }
