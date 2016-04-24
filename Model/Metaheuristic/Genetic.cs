@@ -2,6 +2,7 @@
 using TrainingProblem;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Metaheuristic
 {
@@ -77,22 +78,27 @@ namespace Metaheuristic
                 totalCost += (max.Cost - solution.Cost);
             }
 
+            double pick;
             for (int i = 0; i < nbToTake; ++i) {
-                double pick = rand.NextDouble() * totalCost;
+                Thread.Sleep(100);
+                pick = rand.NextDouble() * totalCost;
                 for (int j = 0; j < poids.Count; j++) {
-//                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
+                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
-//						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
+						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
                         break;
                     }
                     else
                         pick -= poids[j];
                 }
             }
-//			Console.WriteLine("RESULT -------------------------------------------------");
-//			foreach (Solution s in result)
-//				Console.WriteLine(s);
+           			Console.WriteLine("RESULT -------------------------------------------------");
+           			foreach (Solution s in result)
+           				Console.WriteLine(s);
+
+            if (result.Count < 1)
+                Console.WriteLine("STOP");
             return result;
         }
 
@@ -110,11 +116,7 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-<<<<<<< HEAD
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].crossover(tmp[rand.Next(tmp.Count)]));
-=======
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(tmp.ElementAt(rand.Next(tmp.Count))));
->>>>>>> 21fafe91bf06f44ca82a2c4dc38c923bb742657f
                     else
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
