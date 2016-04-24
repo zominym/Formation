@@ -9,18 +9,34 @@ namespace Metaheuristic
     {
         const double transportFee = 0.4;
         const int agencyFee = 3000;
+        const int cityCapacity = 60;
 
 		private double _cost = -1;
 		private List<City> _cities = new List<City>();
         private List<Solution> _neighbors = null;
-		private Tuple<Agency, City>[] _tuples;
+		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 
 		// Constructeur de solution aléatoire
 		public Solution() {
-			_cities = new List<City>();
+            Random rand = new Random();
+            foreach (City city in MainClass.getCities())
+                _cities.Add(new City(city));
+            int tirage, capacityRequired, i=0;
+            foreach(Agency a in MainClass.getAgencies())
+            {
+                do
+                {
+                    tirage = rand.Next(_cities.Count);
+                    capacityRequired = a.getNbPers() + _cities[tirage].getNbPers();
+                } while (capacityRequired <= cityCapacity);
 
+                _cities[tirage].setNbPers(capacityRequired);
 
+                _tuples[i] = new Tuple<Agency, City>(a, _cities[tirage]);
 
+                i++;
+            }
+           
         }
 
 		// Constructeur de solution aléatoire avec distance maximum entre deux villes
