@@ -17,6 +17,7 @@ namespace LieuxDeFormation
 		const string citiesFile = "../../LieuxPossiblesTEST.txt";
 		const string agenciesFile = "../../ListeAgences_TEST.txt";
 
+		const int MAXPERS = 60;
 		static List<Agency> agencies;
 		static List<City> cities;
 

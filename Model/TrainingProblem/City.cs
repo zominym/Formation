@@ -38,6 +38,15 @@ namespace TrainingProblem
 			nbPers = 0;
 		}
 
+		public City(City c) {
+			id = c.id;
+			name = c.name;
+			codepostal = c.codepostal;
+			longitude = c.longitude;
+			latitude = c.latitude;
+			nbPers = c.nbPers;
+		}
+
 		public override string ToString ()
 		{
 			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;
@@ -81,6 +90,11 @@ namespace TrainingProblem
 		public int getNbPers()
 		{
 			return nbPers;
+		}
+
+		public void setNbPers(int n)
+		{
+			nbPers = n;
 		}
 	}
 }

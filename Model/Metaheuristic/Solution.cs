@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TrainingProblem;
+using LieuxDeFormation;
 
 namespace Metaheuristic
 {
@@ -10,14 +11,12 @@ namespace Metaheuristic
         const int agencyFee = 3000;
 
 		private double _cost = -1;
-        private Agency[] _agencies;
-        private City[] _cities;
+		private List<City> _cities = new List<City>();
         private List<Solution> _neighbors = null;
-
+		private Tuple<Agency, City>[] _tuples;
 
 		// Constructeur de solution aléatoire
 		public Solution() {
-			_agencies = new List<Agency>();
 			_cities = new List<City>();
 
 
@@ -25,26 +24,41 @@ namespace Metaheuristic
         }
 
 		// Constructeur de solution aléatoire avec distance maximum entre deux villes
-		public Solution(int distanceMax) {
-			_agencies = new List<Agency>();
-			_cities = new List<City>();
+		public Solution(int distanceMax, int increment = 10, int refusMax = 100) {
+			foreach (City city in MainClass.getCities())
+				_cities.Add(new City(city));
 
+			Random rand = new Random();
+			City c = new City();
 
+			foreach (Agency a in MainClass.getAgencies()) {
+				int refus = 0;
+				bool continuer = false;
+				do {
+					c = _cities[rand.Next(_cities.Count)];
 
-		}
+					if (refus >= refusMax) {
+						refus = 0;
+						distanceMax += increment;
+					}
 
-		// Constructeur de solution prenant la ville la plus proche (disponible) de chaque agence
-		public Solution(int distanceMax) {
-			_agencies = new List<Agency>();
-			_cities = new List<City>();
+					if (c.getNbPers() + a.getNbPers() <= 60)
+						continuer = true;
 
-
+					if (a.distanceTo(c) > distanceMax) {
+						continuer = false;
+						refus++;
+					}
+				} while (continuer);
+				_tuples = _tuples + new Tuple(a, c);
+				c.setNbPers(c.getNbPers() + a.getNbPers());
+			}
 
 		}
 
 		public Solution (Solution s) {
 			_cost = s.Cost;
-			_agencies = s.Agencies;
+			_tuples = s._tuples;
 			_cities = s.Cities;
 			_neighbors = s._neighbors;
 		}
@@ -56,11 +70,6 @@ namespace Metaheuristic
                     buildNeighborhood();
                 return _neighbors;
             }
-        }
-
-        public Agency[] Agencies
-        {
-            get { return _agencies; }
         }
 
         public City[] Cities

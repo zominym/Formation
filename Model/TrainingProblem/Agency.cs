@@ -14,11 +14,6 @@ namespace TrainingProblem
 		{
 			nbPers = int.Parse(csvLine.Split (';')[5]);
 		}
-
-		public override string ToString ()
-		{
-			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;
-		}
 	}
 }
 
