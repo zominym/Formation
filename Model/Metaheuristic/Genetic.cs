@@ -91,7 +91,7 @@ namespace Metaheuristic
             List<Solution> nextPopulation, tmp, currentPopulation = buildPopulation();
             Solution bestSolution = getBestSolution(currentPopulation);
             for (int i = 0; i < Iterations; i++) {
-				if (i % 10 == 0)
+				if (i % 1 == 0)
                 	Console.Write(" ITE "+i);
 				nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count / 2);
                 tmp = new List<Solution>(nextPopulation);
@@ -106,11 +106,14 @@ namespace Metaheuristic
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
-				if (i % 100 == 0) {
-					foreach (Solution s in currentPopulation)
+				if (i % 1 == 0) {
+					foreach (Solution s in currentPopulation) {
+						//Console.WriteLine(s);
+					}
+					foreach (Solution s in currentPopulation) {
 						Console.WriteLine(s.Cost);
-
-					Console.WriteLine(getBestSolution(currentPopulation).Cost);
+						Console.WriteLine(s.id);
+					}
 				}
                 if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)
                     bestSolution = getBestSolution(currentPopulation);

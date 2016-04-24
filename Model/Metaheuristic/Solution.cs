@@ -7,6 +7,7 @@ namespace Metaheuristic
 {
     public class Solution
     {
+		static int ID = 0;
 		double TRANSPORTFEE = 0.4;
 		int AGENCYFEE = 3000;
 		const int CITYCAPACITY = 60;
@@ -17,8 +18,12 @@ namespace Metaheuristic
 		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
 
+		public int id;
+
 		// Constructeur de solution aléatoire
 		public Solution() {
+			id = ID + 1;
+			ID++;
             foreach (City city in MainClass.getCities())
                 _cities.Add(new City(city));
             int tirage, capacityRequired, i = 0;
@@ -41,6 +46,8 @@ namespace Metaheuristic
 
 		// Constructeur de solution aléatoire avec distance maximum entre deux villes
 		public Solution(int distanceMax, int increment = 10, int refusMax = 100) {
+			id = ID + 1;
+			ID++;
 			foreach (City city in MainClass.getCities())
 				_cities.Add(new City(city));
 
@@ -73,7 +80,9 @@ namespace Metaheuristic
 		}
 
 		public Solution (Solution s) {
-			_cost = s.Cost;
+			id = ID + 1;
+			ID++;
+			_cost = -1;
 			for (int i = 0; i < _tuples.Length; i++)
 				_tuples[i] = new Tuple<Agency, City>(s._tuples[i].Item1, new City(s._tuples[i].Item2));
             _cities = new List<City>();
@@ -275,6 +284,7 @@ namespace Metaheuristic
 				str += "\n";
             }
 			str += "COST : " + Cost;
+			str += "ID : " + id;
             return str;
 		}
 
