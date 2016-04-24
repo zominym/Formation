@@ -70,43 +70,36 @@ namespace Metaheuristic
             }
 
 
-
             List<double> poids = new List<double>();
             foreach (Solution solution in population) {
                 poids.Add(max.Cost - solution.Cost);
                 totalCost += (max.Cost - solution.Cost);
             }
-
-            for (int i = 0; i < nbToTake; ++i) {
+                
+            while (nbToTake > 0)
+            {
                 double pick = rand.NextDouble() * totalCost;
-                for (int j = 0; j < poids.Count; j++) {
-//                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
-                    if (pick < poids[j]) {
+                for (int j = 0; j < poids.Count; j++)
+                {
+                    if (pick <= poids[j]) {
                         result.Add(population.ElementAt(j));
-//						Console.WriteLine("ADDED SMTG IN RESULT IN ROULETTE");
+                        nbToTake--;
                         break;
                     }
                     else
                         pick -= poids[j];
                 }
             }
-//			Console.WriteLine("RESULT -------------------------------------------------");
-//			foreach (Solution s in result)
-//				Console.WriteLine(s);
             return result;
         }
 
         public Solution getSolution(){
-//			Console.WriteLine("Debut getSolution()");
             double ProbaCross = 0.9;
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-//				Console.WriteLine("Debut du for i, iteration : " + i + " sur " + Iterations);
+                Console.WriteLine("ITE "+i);
                 nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
-//				Console.WriteLine("POPULATION -------------------------------------------------");
-//				foreach (Solution s in nextPopulation)
-//					Console.WriteLine(s);
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
