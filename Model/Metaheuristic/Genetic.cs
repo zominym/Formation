@@ -11,7 +11,7 @@ namespace Metaheuristic
         private List<City> _cities;
         private List<Solution> _population;
         private int _iterations, _populationSize;
-        private static Random rand = new Random();
+		private static Random rand = LieuxDeFormation.MainClass.rand;
 
         public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
             //_agencies = agencies;
@@ -93,6 +93,7 @@ namespace Metaheuristic
 //			Console.WriteLine("RESULT -------------------------------------------------");
 //			foreach (Solution s in result)
 //				Console.WriteLine(s);
+
             return result;
         }
 

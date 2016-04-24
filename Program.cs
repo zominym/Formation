@@ -20,6 +20,7 @@ namespace LieuxDeFormation
 		const int MAXPERS = 60;
 		static List<Agency> agencies;
 		static List<City> cities;
+		static public Random rand = new Random();
 
 
 		// BROUILLON
