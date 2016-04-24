@@ -24,6 +24,10 @@ namespace Metaheuristic
             get { return _populationSize;}
         }
 
+        City[] Cities {
+            get { return _cities; }
+        }
+
         int Iterations {
             get { return _iterations; }
         }
@@ -44,13 +48,13 @@ namespace Metaheuristic
             }
         }
 
-        public List<Solution> getBestSolutions(List<Solution> population, int nbBest){
-            List<Solution> bestSolutions = new List<Solution>();
-            population.OrderBy(x => x.Cost);
-            for (int i = 0; i < nbBest; i++) {
-                bestSolutions.Add(population.ElementAt(i));
+        public Solution getBestSolution(List<Solution> population){
+            Solution max = population.ElementAt(0);
+            foreach (Solution solution in population) {
+                if (solution.Cost > max.Cost)
+                    max = solution;
             }
-            return bestSolutions;
+            return max;
         }
 
         public List<Solution> RouletteSelection(List<Solution> population, int nbToTake){
@@ -81,17 +85,25 @@ namespace Metaheuristic
                         pick -= poids[j];
                 }
             }
-
-
             return result;
         }
 
         public Solution getSolution(){
+            double ProbaCross = 0.9;
             buildPopulation();
+            List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-                
+                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count);
+                tmp = new List<Solution>(nextPopulation);
+                for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
+                    if(ProbaCross > rand.NextDouble())
+                        nextPopulation.Add(nextPopulation.ElementAt(j).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
+                    else
+                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate(Cities));
+                }
+                currentPopulation = nextPopulation; 
             }
-            return null;
+            return getBestSolution(currentPopulation).getGradientDescendSolution();
         }
     }
 }
