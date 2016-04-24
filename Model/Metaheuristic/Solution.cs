@@ -133,7 +133,7 @@ namespace Metaheuristic
 		}
 
 		public Solution mutate(){   
-            List<City> cities = MainClass.getCities();
+            /*List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
 			bool loop = true;
 			do {
@@ -147,7 +147,8 @@ namespace Metaheuristic
 				if (temp._tuples[idx].Item2.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
-			return temp;
+			return temp;*/
+            return new Solution();
 		}
 
         public Solution crossover(Solution y)
