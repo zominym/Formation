@@ -7,13 +7,13 @@ namespace Metaheuristic
 {
     public class Genetic
     {
-        private Agency[] _agencies;
-        private City[] _cities;
+        private List<Agency> _agencies;
+        private List<City> _cities;
         private List<Solution> _population;
         private int _iterations, _populationSize;
         private static Random rand = new Random();
 
-        public Genetic(Agency[] agencies, City[] cities, int iterations, int populationSize) {
+        public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
             _agencies = agencies;
             _cities = cities;
             _iterations = iterations;
@@ -24,7 +24,7 @@ namespace Metaheuristic
             get { return _populationSize;}
         }
 
-        City[] Cities {
+        List<City> Cities {
             get { return _cities; }
         }
 
@@ -44,7 +44,7 @@ namespace Metaheuristic
             _population = new List<Solution>();
             for (int i = 0; i < PopulationSize; i++)
             {
-                _population.Add(Solution());
+                _population.Add(new Solution());
             }
         }
 
@@ -63,19 +63,19 @@ namespace Metaheuristic
 
             //Take the best solution
             population.OrderBy(x => x.Cost);
-            int max = population.ElementAt(population.Count - 1);
+            Solution max = population.ElementAt(population.Count - 1);
 
 
 
-            List<int> poids = new List<int>();
+            List<double> poids = new List<double>();
             foreach (Solution solution in population) {
-                poids.Add(max - solution.Cost);
-                totalCost += (max - solution.Cost);
+                poids.Add(max.Cost - solution.Cost);
+                totalCost += (max.Cost - solution.Cost);
             }
 
 
             for (int i = 0; i < nbToTake; ++i) {
-                int pick = rand.NextDouble() * totalCost;
+                double pick = rand.NextDouble() * totalCost;
                 for (int j = 0; j < poids.Count; j++) {
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
@@ -99,7 +99,7 @@ namespace Metaheuristic
                     if(ProbaCross > rand.NextDouble())
                         nextPopulation.Add(nextPopulation.ElementAt(j).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
                     else
-                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate(Cities));
+                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate());
                 }
                 currentPopulation = nextPopulation; 
             }

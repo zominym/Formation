@@ -14,8 +14,8 @@ namespace LieuxDeFormation
 {
 	class MainClass
 	{
-		const string citiesFile = "../../LieuxPossiblesTEST.txt";
-		const string agenciesFile = "../../ListeAgences_TEST.txt";
+		const string citiesFile = "../../LieuxPossibles.txt";
+		const string agenciesFile = "../../ListeAgences_100.txt";
 
 		const int MAXPERS = 60;
 		static List<Agency> agencies;
@@ -50,6 +50,9 @@ namespace LieuxDeFormation
 			agencies = loadAgencies();
 			cities = loadCities();
 
+            Genetic algo = new Genetic(agencies, cities, 10, 10);
+            Console.WriteLine(algo.getSolution());
+
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("AGENCIES :");
@@ -69,11 +72,11 @@ namespace LieuxDeFormation
 			Console.WriteLine("TESTS :");
 
 			List<City> cities2 = new List<City>();
-			for (int i = 0; i < agencies.Count(); i++)
+			/*for (int i = 0; i < agencies.Count(); i++)
 				cities2.Add(agencies[(i + 5) % agencies.Count()].toCity());
-			Solution sol = new Solution(agencies.ToArray(), cities2.ToArray());
+			Solution sol = new Solution(agencies.ToArray(), cities2.ToArray());*/
 
-			Console.WriteLine("SOL :");
+			/*Console.WriteLine("SOL :");
 			Console.WriteLine(sol);
 
 			Console.WriteLine("COST :");
@@ -100,7 +103,7 @@ namespace LieuxDeFormation
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("END");
-            Console.ReadKey(true);
+            Console.ReadKey(true);*/
         }
 
 		public static List<City> loadCities()
