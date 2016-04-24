@@ -101,9 +101,9 @@ namespace Metaheuristic
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].crossover(tmp[rand.Next(tmp.Count)]));
                     else
-                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
+                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
                 }
                 currentPopulation = nextPopulation;
                 Console.WriteLine("CURRENT-POP: " + currentPopulation);
