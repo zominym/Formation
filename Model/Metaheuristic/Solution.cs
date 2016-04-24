@@ -28,7 +28,7 @@ namespace Metaheuristic
                 {
                     tirage = rand.Next(_cities.Count);
                     capacityRequired = a.getNbPers() + _cities[tirage].getNbPers();
-                } while (capacityRequired <= CITYCAPACITY);
+                } while (capacityRequired > CITYCAPACITY);
 
                 _cities[tirage].setNbPers(capacityRequired);
 
@@ -46,7 +46,7 @@ namespace Metaheuristic
 
 			Random rand = new Random();
 			City c = new City();
-
+            int i = 0;
 			foreach (Agency a in MainClass.getAgencies()) {
 				int refus = 0;
 				bool loop = true;
@@ -66,7 +66,8 @@ namespace Metaheuristic
 						refus++;
 					}
 				} while (loop);
-				_tuples += Tuple.Create(a, c);
+                _tuples[i] = new Tuple<Agency, City>(a, c);
+                i++;
 				c.setNbPers(c.getNbPers() + a.getNbPers());
 			}
 
@@ -90,7 +91,7 @@ namespace Metaheuristic
             }
         }
 
-        public City[] Cities
+        public List<City> Cities
         {
             get { return _cities; }
         }
@@ -132,13 +133,14 @@ namespace Metaheuristic
 			return temp;
 		}
 
-		public Solution mutate(City[] cities){   
+		public Solution mutate(){   
+            List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
 			Random rand = new Random();
 			bool loop = true;
 			do {
 				int idx = rand.Next(_tuples.Length);
-				City c = cities[rand.Next(cities.Length)];
+				City c = cities[rand.Next(cities.Count)];
 				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() - temp._tuples[idx].Item1.getNbPers());
 				temp._tuples[idx] = Tuple.Create(temp._tuples[idx].Item1, c);
 				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() + temp._tuples[idx].Item1.getNbPers());

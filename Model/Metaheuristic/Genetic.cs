@@ -7,13 +7,13 @@ namespace Metaheuristic
 {
     public class Genetic
     {
-        private Agency[] _agencies;
-        private City[] _cities;
+        private List<Agency> _agencies;
+        private List<City> _cities;
         private List<Solution> _population;
         private int _iterations, _populationSize;
         private static Random rand = new Random();
 
-        public Genetic(Agency[] agencies, City[] cities, int iterations, int populationSize) {
+        public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
             _agencies = agencies;
             _cities = cities;
             _iterations = iterations;
@@ -24,7 +24,7 @@ namespace Metaheuristic
             get { return _populationSize;}
         }
 
-        City[] Cities {
+        List<City> Cities {
             get { return _cities; }
         }
 
@@ -44,7 +44,7 @@ namespace Metaheuristic
             _population = new List<Solution>();
             for (int i = 0; i < PopulationSize; i++)
             {
-                _population.Add(Solution());
+                _population.Add(new Solution());
             }
         }
 
@@ -62,21 +62,24 @@ namespace Metaheuristic
             List<Solution> result = new List<Solution>();
 
             //Take the best solution
-            population.OrderBy(x => x.Cost);
-            int max = population.ElementAt(population.Count - 1);
-
-
-
-            List<int> poids = new List<int>();
+            Solution max = population.First();
             foreach (Solution solution in population) {
-                poids.Add(max - solution.Cost);
-                totalCost += (max - solution.Cost);
+                if (max.Cost < solution.Cost)
+                    max = solution;
             }
 
 
+
+            List<double> poids = new List<double>();
+            foreach (Solution solution in population) {
+                poids.Add(max.Cost - solution.Cost);
+                totalCost += (max.Cost - solution.Cost);
+            }
+
             for (int i = 0; i < nbToTake; ++i) {
-                int pick = rand.NextDouble() * totalCost;
+                double pick = rand.NextDouble() * totalCost;
                 for (int j = 0; j < poids.Count; j++) {
+                    Console.WriteLine("[i,j]:["+i+","+j+"] -> Pick - "+pick);
                     if (pick < poids[j]) {
                         result.Add(population.ElementAt(j));
                         break;
@@ -93,15 +96,16 @@ namespace Metaheuristic
             buildPopulation();
             List<Solution> nextPopulation, tmp, currentPopulation = Population;
             for (int i = 0; i < Iterations; i++) {
-                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count);
+                nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count/2);
                 tmp = new List<Solution>(nextPopulation);
                 for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
                     if(ProbaCross > rand.NextDouble())
-                        nextPopulation.Add(nextPopulation.ElementAt(j).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
+                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).crossover(nextPopulation.ElementAt(rand.Next(tmp.Count))));
                     else
-                        nextPopulation.Add(nextPopulation.ElementAt(j).mutate(Cities));
+                        nextPopulation.Add(tmp.ElementAt(rand.Next(tmp.Count)).mutate());
                 }
-                currentPopulation = nextPopulation; 
+                currentPopulation = nextPopulation;
+                Console.WriteLine("CURRENT-POP: " + currentPopulation);
             }
             return getBestSolution(currentPopulation).getGradientDescendSolution();
         }

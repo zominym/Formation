@@ -47,7 +47,7 @@ namespace TrainingProblem
 			nbPers = c.nbPers;
 		}
 
-		public override bool Equals(City c)
+		public bool Equals(City c)
 		{
 			return c.id.Equals(this.id);
 		}
