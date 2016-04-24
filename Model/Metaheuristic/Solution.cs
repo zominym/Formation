@@ -7,8 +7,8 @@ namespace Metaheuristic
 {
     public class Solution
     {
-        const double transportFee = 0.4;
-        const int agencyFee = 3000;
+		double TRANSPORTFEE = 0.4;
+		int AGENCYFEE = 3000;
 
 		private double _cost = -1;
 		private List<City> _cities = new List<City>();
@@ -33,7 +33,7 @@ namespace Metaheuristic
 
 			foreach (Agency a in MainClass.getAgencies()) {
 				int refus = 0;
-				bool continuer = false;
+				bool loop = true;
 				do {
 					c = _cities[rand.Next(_cities.Count)];
 
@@ -43,14 +43,14 @@ namespace Metaheuristic
 					}
 
 					if (c.getNbPers() + a.getNbPers() <= 60)
-						continuer = true;
+						loop = false;
 
 					if (a.distanceTo(c) > distanceMax) {
-						continuer = false;
+						loop = true;
 						refus++;
 					}
-				} while (continuer);
-				_tuples = _tuples + new Tuple(a, c);
+				} while (loop);
+				_tuples = _tuples + Tuple.Create(a, c);
 				c.setNbPers(c.getNbPers() + a.getNbPers());
 			}
 
@@ -88,30 +88,47 @@ namespace Metaheuristic
         private void buildNeighborhood()
         {
             _neighbors = new List<Solution>();
-            for (int i = 0; i < Agencies.Length; i++)
+            for (int i = 0; i < _tuples.Length; i++)
             {
-                for (int j = i + 1; j < Agencies.Length; j++) 
+                for (int j = i + 1; j < _tuples.Length; j++) 
                 {
                     Solution tmp = swap(i, j);
-                    _neighbors.Add(tmp);
+					if (tmp != null)
+                    	_neighbors.Add(tmp);
                 }
             }
         }
 
 		private Solution swap(int a, int b){
 			Solution temp = new Solution(this);
-			City tmp = temp.Cities[a];
-			temp.Cities[a] = temp.Cities[b];
-			temp.Cities[b] = tmp;
+			City tmp = temp._tuples[a].Item2;
+			temp._tuples[a] = Tuple.Create(temp._tuples[a].Item1, temp._tuples[b].Item2);
+			temp._tuples[b] = Tuple.Create(temp._tuples[b].Item1, tmp);
 			temp._cost = -1;
+
+			temp._tuples[a].Item2.setNbPers(temp._tuples[a].Item2.getNbPers() + temp._tuples[a].Item1.getNbPers() - temp._tuples[b].Item1.getNbPers());
+			temp._tuples[b].Item2.setNbPers(temp._tuples[b].Item2.getNbPers() + temp._tuples[b].Item1.getNbPers() - temp._tuples[a].Item1.getNbPers());
+
+			if (temp._tuples[a].Item2.getNbPers() > 60 || temp._tuples[b].Item2.getNbPers() > 60)
+				return null;
 			return temp;
 		}
 
 		public Solution mutate(City[] cities){   
 			Solution temp = new Solution(this);
 			Random rand = new Random();
-			temp._cities[rand.Next(_cities.Length)] = cities[rand.Next(cities.Length)];
-			temp._cost = -1;
+			bool loop = true;
+			do {
+				int idx = rand.Next(_tuples.Length);
+				City c = cities[rand.Next(cities.Length)];
+				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() - temp._tuples[idx].Item1.getNbPers());
+				temp._tuples[idx] = Tuple.Create(temp._tuples[idx].Item1, c);
+				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() + temp._tuples[idx].Item1.getNbPers());
+				temp._cost = -1;
+
+				if (temp._tuples[idx].Item2.getNbPers() <= 60)
+					loop = false;
+			} while (loop);
 			return temp;
 		}
 
@@ -121,17 +138,15 @@ namespace Metaheuristic
             double agenciesFee = 0;
             List<City> centers = new List<City>();
 
-            for(int i = 0; i < Agencies.Length; i++)
+            for(int i = 0; i < _tuples.Length; i++)
             {
-                City c = Cities[i];
-                tripFee += Agencies[i].distanceTo(c) * transportFee * Agencies[i].getNbPers();
-                if (!centers.Contains(c))
+				tripFee += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * TRANSPORTFEE * _tuples[i].Item1.getNbPers();
+				if (!centers.Contains(_tuples[i].Item2))
                 {
-                    agenciesFee += agencyFee;
-                    centers.Add(c);
+                    agenciesFee += AGENCYFEE;
+					centers.Add(_tuples[i].Item2);
                 }
             }
-            
             return tripFee + agenciesFee;
         }
 
@@ -155,11 +170,11 @@ namespace Metaheuristic
 			
         public override string ToString(){
             string str = "";
-            for (int i = 0; i < Agencies.Length; i++)
+            for (int i = 0; i < _tuples.Length; i++)
             {
-				str += "AGENCY " + " " + Agencies[i].getId();
+				str += "AGENCY " + " " + _tuples[i].Item1.getId();
                 str += " ---> ";
-				str += "CITY " + " " + Cities[i].getId();
+				str += "CITY " + " " + _tuples[i].Item2.getId();
 				str += "\n";
             }
             return str;
