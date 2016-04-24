@@ -266,6 +266,7 @@ namespace Metaheuristic
 				str += "CITY " + " " + _tuples[i].Item2.getId();
 				str += "\n";
             }
+			str += "COST : " + Cost;
             return str;
         }
     }
