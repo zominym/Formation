@@ -52,22 +52,56 @@ namespace Metaheuristic
         }
 
         public List<Solution> RouletteSelection(List<Solution> population, int nbToTake){
-            double totalCost = 0;
+            double totalEfficiency = 0;
             List<Solution> result = new List<Solution>();
 
-            //Take the best solution
-            Solution max = population.First();
+            foreach (Solution sol in population)
+            {
+                totalEfficiency += 1 / sol.Cost;
+            }
+
+            List<Solution> tmp = new List<Solution>(population);
+
+            int nbTaken = 0;
+            while (nbTaken < nbToTake)
+            {
+                double incrementation = 0; //TODO Change the name
+                double alpha = rand.NextDouble() * totalEfficiency;
+//                Console.ReadLine();
+                for (int i = 0; i < tmp.Count; i++) {
+                    if (((1 / tmp[i].Cost) + incrementation) > alpha)
+                    {
+                        result.Add(tmp[i]);
+                        tmp.Remove(tmp[i]);
+                        totalEfficiency = 0;
+                        foreach (Solution sol in tmp)
+                        {
+                            totalEfficiency += 1 / sol.Cost;
+                        }
+                        nbTaken++;
+                        break;
+                    }
+                    else
+                    {
+                        incrementation += (1 / tmp[i].Cost);
+                    }
+                }
+            }
+
+            //Take the --best WORST solution
+            /*Solution max = population.First();
             foreach (Solution solution in population) {
                 if (max.Cost < solution.Cost)
                     max = solution;
-            }
+            }*/
 
-
+            /*
             List<double> poids = new List<double>();
             foreach (Solution solution in population) {
                 poids.Add(max.Cost - solution.Cost);
                 totalCost += (max.Cost - solution.Cost);
             }
+
                 
             while (nbToTake > 0)
             {
@@ -82,12 +116,12 @@ namespace Metaheuristic
                     else
                         pick -= poids[j];
                 }
-            }
+            }*/
             return result;
         }
 
         public Solution getSolution(){
-            double ProbaCross = 0.5;
+            double ProbaCross = 0.0;
             List<Solution> nextPopulation, tmp, currentPopulation = buildPopulation();
             Solution bestSolution = getBestSolution(currentPopulation);
             for (int i = 0; i < Iterations; i++) {
@@ -99,8 +133,7 @@ namespace Metaheuristic
 					if (ProbaCross > rand.NextDouble()) {
 						int rand1 = rand.Next(tmp.Count);
 						int rand2 = rand.Next(tmp.Count);
-						Solution s = tmp[rand1].crossover(tmp[rand2]);
-						nextPopulation.Add(s);
+                        nextPopulation.AddRange(tmp[rand1].crossover(tmp[rand2]));
 					}
                     else
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
@@ -111,8 +144,8 @@ namespace Metaheuristic
 						//Console.WriteLine(s);
 					}
 					foreach (Solution s in currentPopulation) {
-						Console.WriteLine(s.Cost);
-						Console.WriteLine(s.id);
+						//Console.WriteLine(s.Cost);
+						//Console.WriteLine(s.id);
 					}
 				}
                 if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)

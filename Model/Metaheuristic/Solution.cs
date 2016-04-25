@@ -143,8 +143,9 @@ namespace Metaheuristic
 		}
 
 		public Solution mutate(){   
-            /*List<City> cities = MainClass.getCities();
+            List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
+            Console.WriteLine("BEFORE : "+this);
 			bool loop = true;
 			do {
 				int idx = rand.Next(_tuples.Length);
@@ -157,8 +158,9 @@ namespace Metaheuristic
 				if (temp._tuples[idx].Item2.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
-			return temp;*/
-            return new Solution();
+            Console.WriteLine("NOW : "+temp);
+			return temp;
+            //return new Solution();
 		}
 
         public List<Solution> crossover(Solution y)
