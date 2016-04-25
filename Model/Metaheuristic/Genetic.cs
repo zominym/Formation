@@ -67,7 +67,7 @@ namespace Metaheuristic
             {
                 double incrementation = 0; //TODO Change the name
                 double alpha = rand.NextDouble() * totalEfficiency;
-                Console.ReadLine();
+//                Console.ReadLine();
                 for (int i = 0; i < tmp.Count; i++) {
                     if (((1 / tmp[i].Cost) + incrementation) > alpha)
                     {
@@ -121,7 +121,7 @@ namespace Metaheuristic
         }
 
         public Solution getSolution(){
-            double ProbaCross = 0.5;
+            double ProbaCross = 0.0;
             List<Solution> nextPopulation, tmp, currentPopulation = buildPopulation();
             Solution bestSolution = getBestSolution(currentPopulation);
             for (int i = 0; i < Iterations; i++) {
@@ -133,8 +133,7 @@ namespace Metaheuristic
 					if (ProbaCross > rand.NextDouble()) {
 						int rand1 = rand.Next(tmp.Count);
 						int rand2 = rand.Next(tmp.Count);
-						Solution s = tmp[rand1].crossover(tmp[rand2]);
-						nextPopulation.Add(s);
+                        nextPopulation.AddRange(tmp[rand1].crossover(tmp[rand2]));
 					}
                     else
                         nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
@@ -145,8 +144,8 @@ namespace Metaheuristic
 						//Console.WriteLine(s);
 					}
 					foreach (Solution s in currentPopulation) {
-						Console.WriteLine(s.Cost);
-						Console.WriteLine(s.id);
+						//Console.WriteLine(s.Cost);
+						//Console.WriteLine(s.id);
 					}
 				}
                 if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)
