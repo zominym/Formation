@@ -40,8 +40,36 @@ namespace Metaheuristic
 //				Console.WriteLine(a);
 //				Console.WriteLine(this.toStringShort());
             }
-           
         }
+
+		public Solution(int nbCentres) {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
+			List<Agency> _agencies = LieuxDeFormation.MainClass.getAgencies();
+			List<City> previous = new List<City>();
+			id = ID + 1;
+			ID++;
+			int tirage, capacityRequired;
+			for (int i = 0; i < nbCentres; i++) {
+				do
+				{
+					tirage = rand.Next(_cities.Count);
+					capacityRequired = _agencies[i].getNbPers() + this.getNbPers(_cities[tirage]);
+				} while (capacityRequired > CITYCAPACITY || previous.Contains(_cities[tirage]));
+
+				_tuples[i] = new Tuple<Agency, City>(_agencies[i], _cities[tirage]);
+				previous.Add(_cities[tirage]);
+			}
+			_cities = getUsedCities();
+			for (int i = nbCentres; i < _agencies.Count; i++) {
+				do
+				{
+					tirage = rand.Next(_cities.Count);
+					capacityRequired = _agencies[i].getNbPers() + this.getNbPers(_cities[tirage]);
+				} while (capacityRequired > CITYCAPACITY);
+
+				_tuples[i] = new Tuple<Agency, City>(_agencies[i], _cities[tirage]);
+			}
+		}
 
 		// Constructeur de solution aléatoire avec distance maximum entre deux villes
 		public Solution(int distanceMax, int increment = 10, int refusMax = 100) {
@@ -95,10 +123,8 @@ namespace Metaheuristic
         }
 
 		public double Cost {
-			get { 
-				if (_cost == -1)
-					_cost = calculateCost();
-				return _cost;
+			get {
+				return calculateCost();
 			}
 		}
             
@@ -126,6 +152,15 @@ namespace Metaheuristic
 			if (temp.getNbPers(_tuples[a].Item2) > CITYCAPACITY || temp.getNbPers(_tuples[b].Item2) > CITYCAPACITY)
 				return null;
 			return temp;
+		}
+
+		private void swap(City a, City b){
+			for (int i = 0; i < _tuples.Length; i++) {
+				if (_tuples[i].Item2.getId() == a.getId())
+					_tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, b);
+				else if (_tuples[i].Item2.getId() == b.getId())
+					_tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, a);
+			}
 		}
 
 		public Solution mutate(){   
@@ -163,6 +198,40 @@ namespace Metaheuristic
 				}
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
 					loop = false;
+				if (c.distanceTo(temp._tuples[n].Item1) > 200)
+					loop = true;
+			} while (loop);
+
+			temp._cost = -1;
+			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+
+			return temp;
+		}
+
+		public Solution mutate2(int n) {
+			Solution temp = new Solution(this);
+			City c;
+			bool loop = true;
+			do {
+				double rnd = rand.NextDouble();
+				if (rnd < 0.5) {
+					List<City> cities = LieuxDeFormation.MainClass.getCities();
+					c = cities[rand.Next(cities.Count)];
+					temp.swap(temp._tuples[n].Item2, c);
+					loop = false;
+				}
+				else if (rnd < 1) {
+					List<City> gUC = getUsedCities();
+					c = gUC[rand.Next(gUC.Count)];
+					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
+						loop = false;
+//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
+//						loop = true;
+				}
+				else {
+					// échanger deux agences de deux centres ouverts entre elles
+					c = null;
+				}
 			} while (loop);
 
 			temp._cost = -1;
@@ -174,7 +243,7 @@ namespace Metaheuristic
 		public List<City> getUsedCities() {
 			List<City> ret = new List<City>();
 			for (int i = 0; i < _tuples.Length; i++) {
-				if (!ret.Contains(_tuples[i].Item2))
+				if (_tuples[i] != null && !ret.Contains(_tuples[i].Item2))
 					ret.Add(_tuples[i].Item2);
 			}
 			return ret;
@@ -254,7 +323,7 @@ namespace Metaheuristic
             for(int i = 0; i < _tuples.Length; i++)
             {
 				tripFee += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * TRANSPORTFEE * 2 * _tuples[i].Item1.getNbPers();
-				if (!centers.Contains(_tuples[i].Item2))
+				if (!containCity(centers, _tuples[i].Item2))
                 {
                     agenciesFee += AGENCYFEE;
 					centers.Add(_tuples[i].Item2);
@@ -262,6 +331,13 @@ namespace Metaheuristic
             }
             return tripFee + agenciesFee;
         }
+
+		public bool containCity(List<City> cities, City city) {
+			foreach (City c in cities)
+				if (c.getId() == city.getId())
+					return true;
+			return false;
+		}
 
         public Solution getGradientDescendSolution()
         {
@@ -303,7 +379,7 @@ namespace Metaheuristic
 				str += " " + this.getNbPers(c);
 				sum += this.getNbPers(c);
 			}
-			return str + " : " + sum;
+			return str + " ; nbPersTot : " + sum + " ; nbCentres : " + getUsedCities().Count;
 		}
 
 		public int getPersTot() {

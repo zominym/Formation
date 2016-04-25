@@ -65,15 +65,26 @@ namespace LieuxDeFormation
 //			tuples1[0] = new Tuple<int,int>(30, 40);
 //			Console.WriteLine(tuples2[0]);
 
-
+//			Solution s = new Solution(10, 10, 1000);
+//			Console.WriteLine(s.calculateCostBavard());
+//			Console.WriteLine(s);
+//			Console.WriteLine(s.toStringShort());
 
 			Taboo taboo = new Taboo(agencies, cities);
-			Solution s = taboo.run(1000000, 100);
+			Solution s = taboo.run(10000);
 			Console.WriteLine(s);
 			Console.WriteLine(s.toStringShort());
 			Solution sp = s.getGradientDescendSolution();
 			Console.WriteLine(sp);
 			Console.WriteLine(sp.toStringShort());
+
+
+
+//			Solution s = new Solution(9);
+//			Console.WriteLine(s);
+//			Console.WriteLine(s.toStringShort());
+
+
 
 //			for (int i = 0; i < 10; i++) {
 //				Solution s = new Solution();
