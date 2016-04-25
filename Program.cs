@@ -52,10 +52,10 @@ namespace LieuxDeFormation
 			cities = loadCities();
 
 
-            Genetic algo = new Genetic(agencies, cities, 1000, 100);
-			Solution s = algo.getSolution();
-			Console.WriteLine(s);
-			Console.WriteLine(s.toStringShort());
+//            Genetic algo = new Genetic(agencies, cities, 1000, 100);
+//			Solution s = algo.getSolution();
+//			Console.WriteLine(s);
+//			Console.WriteLine(s.toStringShort());
 
 
 //			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
@@ -67,10 +67,13 @@ namespace LieuxDeFormation
 
 
 
-//			Taboo taboo = new Taboo(agencies, cities);
-//			Solution s = taboo.run(1000, 100);
-//			Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
+			Taboo taboo = new Taboo(agencies, cities);
+			Solution s = taboo.run(1000000, 100);
+			Console.WriteLine(s);
+			Console.WriteLine(s.toStringShort());
+			Solution sp = s.getGradientDescendSolution();
+			Console.WriteLine(sp);
+			Console.WriteLine(sp.toStringShort());
 
 //			for (int i = 0; i < 10; i++) {
 //				Solution s = new Solution();

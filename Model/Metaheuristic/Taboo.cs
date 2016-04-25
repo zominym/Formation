@@ -29,6 +29,7 @@ namespace Metaheuristic
 				s = visit(s, nbVoisins);
 				if (s.Cost < min.Cost)
 					min = s;
+				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
 				Console.WriteLine("Iter : " + i + " --> " + "cost actuel : " + s.Cost + " cost min : " + min.Cost);

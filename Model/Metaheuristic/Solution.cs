@@ -154,7 +154,13 @@ namespace Metaheuristic
 			City c;
 			bool loop = true;
 			do {
-				c = _cities[rand.Next(_cities.Count)];
+				double rnd = rand.NextDouble();
+				if (rnd < 0.5)
+					c = _cities[rand.Next(_cities.Count)];
+				else {
+					List<City> gUC = getUsedCities();
+					c = gUC[rand.Next(gUC.Count)];
+				}
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
@@ -163,6 +169,15 @@ namespace Metaheuristic
 			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
 
 			return temp;
+		}
+
+		public List<City> getUsedCities() {
+			List<City> ret = new List<City>();
+			for (int i = 0; i < _tuples.Length; i++) {
+				if (!ret.Contains(_tuples[i].Item2))
+					ret.Add(_tuples[i].Item2);
+			}
+			return ret;
 		}
 
 		public int getNbPers(City c) {
@@ -175,7 +190,6 @@ namespace Metaheuristic
 
         public List<Solution> crossover(Solution y)
 		{
-			//TODO crossover renvoie parfois des solutions avec des villes ayant plus de 100 personnes !!!!!!
 //			Console.WriteLine("Debut du crossover");
 			Solution fils;
             Solution fille;
