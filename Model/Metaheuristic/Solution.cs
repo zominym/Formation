@@ -161,15 +161,19 @@ namespace Metaheuristic
             return new Solution();
 		}
 
-        public Solution crossover(Solution y)
+        public List<Solution> crossover(Solution y)
 		{
 			//TODO crossover renvoie parfois des solutions avec des villes ayant plus de 100 personnes !!!!!!
 //			Console.WriteLine("Debut du crossover");
-			Solution temp;
+			Solution fils;
+            Solution fille;
 			bool loop = true;
 			do {
-				temp = new Solution(this);
-				temp._cities = new List<City>();              
+				fils = new Solution(this);
+                fille = new Solution(this);
+
+				fils._cities = new List<City>();
+                fille._cities = new List<City>();
 
 				int i = 0;
 //				Console.WriteLine("CROSSOVER");
@@ -179,34 +183,47 @@ namespace Metaheuristic
 //					Console.WriteLine(this._tuples[i].Item2);
 //					Console.WriteLine("PARENT 2 : ");
 //					Console.WriteLine(y._tuples[i].Item2);
-					City c;
+					City c, c2;
 					if (rand.NextDouble() < 0.5) {
 //						Console.WriteLine("SELECTED PARENT 1");
 						c = new City(this._tuples[i].Item2);
-					}
+                        c2 = new City(y._tuples[i].Item2);
+                    }
 					else {
 //						Console.WriteLine("SELECTED PARENT 2");
 						c = new City(y._tuples[i].Item2);
-					}
-					City cp = temp.retrieve(c);
+                        c2 = new City(this._tuples[i].Item2);
+                    }
+					City cp = fils.retrieve(c);
+                    City cp2 = fille.retrieve(c2);
 					if (cp != null)
 						c = cp;
 					else
-						temp._cities.Add(c);
-					temp._tuples[i] = new Tuple<Agency, City>(a, c);
+						fils._cities.Add(c);
+                    if (cp2 != null)
+                        c2 = cp2;
+                    else
+                        fille._cities.Add(c2);
+                    
+                    fils._tuples[i] = new Tuple<Agency, City>(a, c);
+                    fille._tuples[i] = new Tuple<Agency, City>(a, c2);
 
-					i++;
+                    i++;
 				}
-				temp.updateCities();
-				if (temp.validateCities()) {
+				fils.updateCities();
+                fille.updateCities();
+				if (fils.validateCities() && fille.validateCities()) {
 					loop = false;
 //					Console.WriteLine(temp);
 				}
 			} while (loop);
 
-//			Console.WriteLine(temp.toStringShort());
-//			Console.WriteLine("Fin du crossover");
-            return temp;
+            //			Console.WriteLine(temp.toStringShort());
+            //			Console.WriteLine("Fin du crossover");
+            List<Solution> result = new List<Solution>();
+            result.Add(fils);
+            result.Add(fille);
+            return result;
         }
 
 		public void updateCities()
