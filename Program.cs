@@ -53,9 +53,31 @@ namespace LieuxDeFormation
 
 
             Genetic algo = new Genetic(agencies, cities, 1000, 100);
+			Solution s = algo.getSolution();
+			Console.WriteLine(s);
+			Console.WriteLine(s.toStringShort());
 
 
-            Console.WriteLine(algo.getSolution());
+//			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
+//			Tuple<int, int>[] tuples2 = new Tuple<int, int>[10];
+//			tuples1 [0] = new Tuple<int,int>(20,10);
+//			tuples2 [0] = tuples1[0];
+//			tuples1[0] = new Tuple<int,int>(30, 40);
+//			Console.WriteLine(tuples2[0]);
+
+
+
+//			Taboo taboo = new Taboo(agencies, cities);
+//			Solution s = taboo.run(1000, 100);
+//			Console.WriteLine(s);
+//			Console.WriteLine(s.toStringShort());
+
+//			for (int i = 0; i < 10; i++) {
+//				Solution s = new Solution();
+//				//onsole.WriteLine(s);
+//				Console.WriteLine(s.toStringShort());
+//			}
+
 
 //			Console.WriteLine();
 //			Console.WriteLine();

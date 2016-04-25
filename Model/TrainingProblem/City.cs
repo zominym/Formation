@@ -10,7 +10,6 @@ namespace TrainingProblem
 		protected string codepostal;
 		protected double longitude;
 		protected double latitude;
-		protected int nbPers;
 
 		public City () : this("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
 			// NOTHING
@@ -25,7 +24,6 @@ namespace TrainingProblem
 			codepostal = csvTab [2];
             longitude = Double.Parse(csvTab[3]);
             latitude = Double.Parse(csvTab[4]);
-			nbPers = 0;
 		}
 
 		public City(string _id, string _name, string _codepostal, double _longitude, double _latitude){
@@ -35,7 +33,6 @@ namespace TrainingProblem
 			codepostal = _codepostal;
 			longitude = _longitude;
 			latitude = _latitude;
-			nbPers = 0;
 		}
 
 		public City(City c) {
@@ -44,7 +41,6 @@ namespace TrainingProblem
 			codepostal = c.codepostal;
 			longitude = c.longitude;
 			latitude = c.latitude;
-			nbPers = c.nbPers;
 		}
 
 		public bool Equals(City c)
@@ -54,7 +50,7 @@ namespace TrainingProblem
 
 		public override string ToString ()
 		{
-			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ") : " + nbPers;
+			return id + " : " + name + " ; " + codepostal + " (" + longitude + ";" + latitude + ")";
 		}
 
 		public double distanceTo(City c)
@@ -90,16 +86,6 @@ namespace TrainingProblem
 
 		public string getCodePostal() {
 			return codepostal;
-		}
-
-		public int getNbPers()
-		{
-			return nbPers;
-		}
-
-		public void setNbPers(int n)
-		{
-			nbPers = n;
 		}
 	}
 }

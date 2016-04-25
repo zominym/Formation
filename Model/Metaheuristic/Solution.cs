@@ -13,7 +13,6 @@ namespace Metaheuristic
 		const int CITYCAPACITY = 60;
 
 		private double _cost = -1;
-		private List<City> _cities = new List<City>();
         private List<Solution> _neighbors = null;
 		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
@@ -22,24 +21,24 @@ namespace Metaheuristic
 
 		// Constructeur de solution aléatoire
 		public Solution() {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
 			id = ID + 1;
 			ID++;
-            foreach (City city in MainClass.getCities())
-                _cities.Add(new City(city));
             int tirage, capacityRequired, i = 0;
             foreach(Agency a in MainClass.getAgencies())
             {
                 do
                 {
                     tirage = rand.Next(_cities.Count);
-                    capacityRequired = a.getNbPers() + _cities[tirage].getNbPers();
+					capacityRequired = a.getNbPers() + this.getNbPers(_cities[tirage]);
                 } while (capacityRequired > CITYCAPACITY);
-
-                _cities[tirage].setNbPers(capacityRequired);
 
                 _tuples[i] = new Tuple<Agency, City>(a, _cities[tirage]);
 
                 i++;
+
+//				Console.WriteLine(a);
+//				Console.WriteLine(this.toStringShort());
             }
            
         }
@@ -48,8 +47,7 @@ namespace Metaheuristic
 		public Solution(int distanceMax, int increment = 10, int refusMax = 100) {
 			id = ID + 1;
 			ID++;
-			foreach (City city in MainClass.getCities())
-				_cities.Add(new City(city));
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
 
 			City c = new City();
             int i = 0;
@@ -64,7 +62,7 @@ namespace Metaheuristic
 						distanceMax += increment;
 					}
 
-					if (c.getNbPers() + a.getNbPers() <= CITYCAPACITY)
+					if (this.getNbPers(c) + a.getNbPers() <= CITYCAPACITY)
 						loop = false;
 
 					if (a.distanceTo(c) > distanceMax) {
@@ -74,7 +72,6 @@ namespace Metaheuristic
 				} while (loop);
                 _tuples[i] = new Tuple<Agency, City>(a, c);
                 i++;
-				c.setNbPers(c.getNbPers() + a.getNbPers());
 			}
 
 		}
@@ -84,10 +81,7 @@ namespace Metaheuristic
 			ID++;
 			_cost = -1;
 			for (int i = 0; i < _tuples.Length; i++)
-				_tuples[i] = new Tuple<Agency, City>(s._tuples[i].Item1, new City(s._tuples[i].Item2));
-            _cities = new List<City>();
-            foreach (City c in s._cities)
-                _cities.Add(new City(c));
+				_tuples[i] = s._tuples[i];
 			_neighbors = s._neighbors;
 		}
 
@@ -98,11 +92,6 @@ namespace Metaheuristic
                     buildNeighborhood();
                 return _neighbors;
             }
-        }
-
-        public List<City> Cities
-        {
-            get { return _cities; }
         }
 
 		public double Cost {
@@ -134,10 +123,7 @@ namespace Metaheuristic
 			temp._tuples[b] = Tuple.Create(temp._tuples[b].Item1, tmp);
 			temp._cost = -1;
 
-			temp._tuples[a].Item2.setNbPers(temp._tuples[a].Item2.getNbPers() + temp._tuples[a].Item1.getNbPers() - temp._tuples[b].Item1.getNbPers());
-			temp._tuples[b].Item2.setNbPers(temp._tuples[b].Item2.getNbPers() + temp._tuples[b].Item1.getNbPers() - temp._tuples[a].Item1.getNbPers());
-
-			if (temp._tuples[a].Item2.getNbPers() > CITYCAPACITY || temp._tuples[b].Item2.getNbPers() > CITYCAPACITY)
+			if (temp.getNbPers(_tuples[a].Item2) > CITYCAPACITY || temp.getNbPers(_tuples[b].Item2) > CITYCAPACITY)
 				return null;
 			return temp;
 		}
@@ -145,22 +131,46 @@ namespace Metaheuristic
 		public Solution mutate(){   
             List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
-            Console.WriteLine("BEFORE : "+this);
+//            Console.WriteLine("BEFORE : "+this);
 			bool loop = true;
 			do {
+//				Console.WriteLine("BEFORE MUTATE : " + temp.toStringShort());
 				int idx = rand.Next(_tuples.Length);
 				City c = cities[rand.Next(cities.Count)];
-				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() - temp._tuples[idx].Item1.getNbPers());
-				temp._tuples[idx] = Tuple.Create(temp._tuples[idx].Item1, c);
-				temp._tuples[idx].Item2.setNbPers(temp._tuples[idx].Item2.getNbPers() + temp._tuples[idx].Item1.getNbPers());
+				temp._tuples[idx] = new Tuple<Agency, City>(temp._tuples[idx].Item1, c);
 				temp._cost = -1;
-
-				if (temp._tuples[idx].Item2.getNbPers() <= CITYCAPACITY)
+//				Console.WriteLine("AFTER MUTATE : " + temp.toStringShort());
+				if (temp.getNbPers(_tuples[idx].Item2) <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
-            Console.WriteLine("NOW : "+temp);
+//            Console.WriteLine("NOW : "+temp);
 			return temp;
             //return new Solution();
+		}
+
+		public Solution mutate(int n) {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
+			Solution temp = new Solution(this);
+			City c;
+			bool loop = true;
+			do {
+				c = _cities[rand.Next(_cities.Count)];
+				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
+					loop = false;
+			} while (loop);
+
+			temp._cost = -1;
+			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+
+			return temp;
+		}
+
+		public int getNbPers(City c) {
+			int nb = 0;
+			for (int i = 0; i < _tuples.Length; i++)
+				if (_tuples[i] != null && _tuples[i].Item2.getId() == c.getId())
+					nb += _tuples[i].Item1.getNbPers();
+			return nb;
 		}
 
         public List<Solution> crossover(Solution y)
@@ -173,9 +183,6 @@ namespace Metaheuristic
 			do {
 				fils = new Solution(this);
                 fille = new Solution(this);
-
-				fils._cities = new List<City>();
-                fille._cities = new List<City>();
 
 				int i = 0;
 //				Console.WriteLine("CROSSOVER");
@@ -196,24 +203,12 @@ namespace Metaheuristic
 						c = new City(y._tuples[i].Item2);
                         c2 = new City(this._tuples[i].Item2);
                     }
-					City cp = fils.retrieve(c);
-                    City cp2 = fille.retrieve(c2);
-					if (cp != null)
-						c = cp;
-					else
-						fils._cities.Add(c);
-                    if (cp2 != null)
-                        c2 = cp2;
-                    else
-                        fille._cities.Add(c2);
                     
                     fils._tuples[i] = new Tuple<Agency, City>(a, c);
                     fille._tuples[i] = new Tuple<Agency, City>(a, c2);
 
                     i++;
 				}
-				fils.updateCities();
-                fille.updateCities();
 				if (fils.validateCities() && fille.validateCities()) {
 					loop = false;
 //					Console.WriteLine(temp);
@@ -228,34 +223,13 @@ namespace Metaheuristic
             return result;
         }
 
-		public void updateCities()
-		{
-			foreach (City c in _cities) {
-				c.setNbPers(0);
-			}
-			for (int i = 0; i < _tuples.Length; i++) {
-				_tuples[i].Item2.setNbPers(_tuples[i].Item2.getNbPers() + _tuples[i].Item1.getNbPers());
-			}
-
-		}
-
         public Boolean validateCities()
         {
-            foreach (City c in _cities)
-                if (c.getNbPers() > CITYCAPACITY)
+			foreach (City c in LieuxDeFormation.MainClass.getCities())
+				if (this.getNbPers(c) > CITYCAPACITY)
                     return false;
             return true;
         }
-
-		public City retrieve(City c)
-		{
-			City ret = null;
-			foreach (City city in _cities) {
-				if (city.Equals(c))
-					ret = c;
-			}
-			return ret;
-		}
 
         private double calculateCost()
         {
@@ -265,7 +239,7 @@ namespace Metaheuristic
 
             for(int i = 0; i < _tuples.Length; i++)
             {
-				tripFee += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * TRANSPORTFEE * _tuples[i].Item1.getNbPers();
+				tripFee += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * TRANSPORTFEE * 2 * _tuples[i].Item1.getNbPers();
 				if (!centers.Contains(_tuples[i].Item2))
                 {
                     agenciesFee += AGENCYFEE;
@@ -303,17 +277,37 @@ namespace Metaheuristic
 				str += "\n";
             }
 			str += "COST : " + Cost;
-			str += "ID : " + id;
+			str += "\nID : " + id;
             return str;
 		}
 
 		public string toStringShort() {
 			string str = "";
-			for (int i = 0; i < _tuples.Length; i++)
+			int sum = 0;
+			foreach (City c in LieuxDeFormation.MainClass.getCities())
 			{
-				str += " " + _tuples[i].Item2.getNbPers();
+				str += " " + this.getNbPers(c);
+				sum += this.getNbPers(c);
 			}
-			return str;
+			return str + " : " + sum;
+		}
+
+		public int getPersTot() {
+			int sum = 0;
+			foreach (City c in LieuxDeFormation.MainClass.getCities())
+			{
+				sum += this.getNbPers(c);
+			}
+			return sum;
+		}
+
+		public bool Equals(Solution sol)
+		{
+			for (int i = 0; i < _tuples.Length; i++) {
+				if (_tuples[i].Item2.getId() != sol._tuples[i].Item2.getId())
+					return false;
+			}
+			return true;
 		}
     }
 }
