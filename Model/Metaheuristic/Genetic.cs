@@ -52,22 +52,56 @@ namespace Metaheuristic
         }
 
         public List<Solution> RouletteSelection(List<Solution> population, int nbToTake){
-            double totalCost = 0;
+            double totalEfficiency = 0;
             List<Solution> result = new List<Solution>();
 
-            //Take the best solution
-            Solution max = population.First();
+            foreach (Solution sol in population)
+            {
+                totalEfficiency += 1 / sol.Cost;
+            }
+
+            List<Solution> tmp = new List<Solution>(population);
+
+            int nbTaken = 0;
+            while (nbTaken < nbToTake)
+            {
+                double incrementation = 0; //TODO Change the name
+                double alpha = rand.NextDouble() * totalEfficiency;
+                Console.ReadLine();
+                for (int i = 0; i < tmp.Count; i++) {
+                    if (((1 / tmp[i].Cost) + incrementation) > alpha)
+                    {
+                        result.Add(tmp[i]);
+                        tmp.Remove(tmp[i]);
+                        totalEfficiency = 0;
+                        foreach (Solution sol in tmp)
+                        {
+                            totalEfficiency += 1 / sol.Cost;
+                        }
+                        nbTaken++;
+                        break;
+                    }
+                    else
+                    {
+                        incrementation += (1 / tmp[i].Cost);
+                    }
+                }
+            }
+
+            //Take the --best WORST solution
+            /*Solution max = population.First();
             foreach (Solution solution in population) {
                 if (max.Cost < solution.Cost)
                     max = solution;
-            }
+            }*/
 
-
+            /*
             List<double> poids = new List<double>();
             foreach (Solution solution in population) {
                 poids.Add(max.Cost - solution.Cost);
                 totalCost += (max.Cost - solution.Cost);
             }
+
                 
             while (nbToTake > 0)
             {
@@ -82,7 +116,7 @@ namespace Metaheuristic
                     else
                         pick -= poids[j];
                 }
-            }
+            }*/
             return result;
         }
 
