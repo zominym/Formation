@@ -14,8 +14,10 @@ namespace Metaheuristic
 
 		private double _cost = -1;
         private List<Solution> _neighbors = null;
-		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
+		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
+		public static double nbSuccess = 1;
+		public static double nbTries = 1;
 
 		public int id;
 
@@ -154,13 +156,31 @@ namespace Metaheuristic
 			return temp;
 		}
 
-		private void swap(City a, City b){
-			for (int i = 0; i < _tuples.Length; i++) {
-				if (_tuples[i].Item2.getId() == a.getId())
-					_tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, b);
-				else if (_tuples[i].Item2.getId() == b.getId())
-					_tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, a);
+		public Solution swap(City a, City b){
+			Solution temp = new Solution(this);
+			for (int i = 0; i < temp._tuples.Length; i++) {
+				if (temp._tuples[i].Item2.getId() == a.getId())
+					temp._tuples[i] = new Tuple<Agency, City>(temp._tuples[i].Item1, b);
+				else if (temp._tuples[i].Item2.getId() == b.getId())
+					temp._tuples[i] = new Tuple<Agency, City>(temp._tuples[i].Item1, a);
 			}
+			return temp;
+		}
+
+		public Solution give(City a, City b){
+			Solution temp = new Solution(this);
+			int nbPers = 0;
+			for (int i = 0; i < temp._tuples.Length; i++) {
+				if (temp._tuples[i].Item2.getId() == a.getId()) {
+					temp._tuples[i] = new Tuple<Agency, City>(temp._tuples[i].Item1, b);
+					nbPers += temp._tuples[i].Item1.getNbPers();
+				}
+				else if (temp._tuples[i].Item2.getId() == b.getId())
+					nbPers += temp._tuples[i].Item1.getNbPers();
+				if (nbPers > CITYCAPACITY)
+					return null;
+			}
+			return temp;
 		}
 
 		public Solution mutate(){   
@@ -198,8 +218,6 @@ namespace Metaheuristic
 				}
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
 					loop = false;
-				if (c.distanceTo(temp._tuples[n].Item1) > 200)
-					loop = true;
 			} while (loop);
 
 			temp._cost = -1;
@@ -210,32 +228,52 @@ namespace Metaheuristic
 
 		public Solution mutate2(int n) {
 			Solution temp = new Solution(this);
-			City c;
 			bool loop = true;
 			do {
-				double rnd = rand.NextDouble();
-				if (rnd < 0.5) {
+//				double centresIdeal = getPersTot()/CITYCAPACITY;
+//				double offset = (centresIdeal - getUsedCities().Count);
+//				double proba = 0;
+//				if (offset != 0)
+//					proba =  offset / centresIdeal;
+				if (rand.NextDouble() < 0.5 /*nbSuccess / nbTries*/) {
+					List<City> gUC = getUsedCities();
+					City c = gUC[rand.Next(gUC.Count)];
+					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY) {
+						loop = false;
+						nbSuccess += 1;
+						temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+					}
+					//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
+					//						loop = true;
+					nbTries += 1;
+				}
+				else if (rand.NextDouble() < 0.5) {
 					List<City> cities = LieuxDeFormation.MainClass.getCities();
-					c = cities[rand.Next(cities.Count)];
+					City c = cities[rand.Next(cities.Count)];
 					temp.swap(temp._tuples[n].Item2, c);
 					loop = false;
 				}
-				else if (rnd < 1) {
-					List<City> gUC = getUsedCities();
-					c = gUC[rand.Next(gUC.Count)];
-					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
-						loop = false;
-//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
-//						loop = true;
-				}
 				else {
 					// échanger deux agences de deux centres ouverts entre elles
-					c = null;
+					int i1 = rand.Next(_tuples.Length);
+					int i2 = rand.Next(_tuples.Length);
+
+					Agency a1 = temp._tuples[i1].Item1;
+					Agency a2 = temp._tuples[i2].Item1;
+
+					City c1 = temp._tuples[i1].Item2;
+					City c2 = temp._tuples[i2].Item2;
+
+					if (temp.getNbPers(c1) + a2.getNbPers() - a1.getNbPers() <= CITYCAPACITY
+						&& temp.getNbPers(c2) + a1.getNbPers() - a2.getNbPers() <= CITYCAPACITY) {
+						loop = false;
+						temp._tuples[i1] = new Tuple<Agency, City>(a1, c2);
+						temp._tuples[i2] = new Tuple<Agency, City>(a2, c1);
+					}
 				}
 			} while (loop);
 
-			temp._cost = -1;
-			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+//			temp._cost = -1;
 
 			return temp;
 		}
@@ -316,20 +354,18 @@ namespace Metaheuristic
 
         private double calculateCost()
         {
-            double tripFee = 0;
+            double dist = 0;
+			double totalTripFee = 0;
             double agenciesFee = 0;
-            List<City> centers = new List<City>();
+//            List<City> centers = new List<City>();
 
             for(int i = 0; i < _tuples.Length; i++)
             {
-				tripFee += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * TRANSPORTFEE * 2 * _tuples[i].Item1.getNbPers();
-				if (!containCity(centers, _tuples[i].Item2))
-                {
-                    agenciesFee += AGENCYFEE;
-					centers.Add(_tuples[i].Item2);
-                }
+				dist += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * _tuples[i].Item1.getNbPers();
             }
-            return tripFee + agenciesFee;
+			totalTripFee = dist * TRANSPORTFEE * 2;
+			agenciesFee = getUsedCities().Count * AGENCYFEE;
+			return totalTripFee + agenciesFee;
         }
 
 		public bool containCity(List<City> cities, City city) {

@@ -10,6 +10,7 @@ namespace Metaheuristic
 //		List<City> _cities;
 //		List<Agency> _agencies;
 		List<double> _visited;
+		Random rand = LieuxDeFormation.MainClass.rand;
 
 
 		public Taboo(List<Agency> agencies, List<City> cities)
@@ -21,38 +22,49 @@ namespace Metaheuristic
 
 		public Solution run(int nbIter) {
 			int nbVoisins = LieuxDeFormation.MainClass.getAgencies().Count;
-			Solution min = new Solution(9);
+			Solution min = new Solution();
 			Solution s = min;
 			Console.WriteLine("INIT --> " + "cost actuel : " + s.Cost);
 //			Console.WriteLine(s.toStringShort());
 			for (int i = 0; i < nbIter; i++) {
 //				if (s.getPersTot() != 522)
 //					Console.WriteLine("Alerte 1 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
-				s = visit(s, nbVoisins);
+				s = visit(s);
 				if (s.Cost < min.Cost)
 					min = s;
-				_visited.Add(s.Cost);
+//				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
 				Console.WriteLine("ITER: " + i + " --> " + "actuel: " + s.Cost + " min: " + min.Cost + " centres: " + s.getUsedCities().Count);
+				Console.WriteLine(Solution.nbSuccess/Solution.nbTries);
 //				s.calculateCostBavard();
 //				Console.WriteLine(s.toStringShort());
 			}
 			return s;
 		}
 
-		public Solution visit(Solution s, int nbVoisins) {
+		public Solution visit(Solution s) {
 //			Console.WriteLine("Alerte 2 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
 			Solution min = null;
-			for (int i = 0; i < nbVoisins; i++) {
-				Solution sp = s.mutate2(i);
+			for (int i = 0; i < s._tuples.Length; i++) {
+				Solution sp = s.mutate(i);
 				if (i == 0)
 					min = sp;
-				if (sp.Cost < min.Cost && !alreadyVisited(sp))
+				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)
 					min = sp;
 //				else
 //					Console.WriteLine(sp.Cost + " worst than " + min.Cost);
 //				Console.WriteLine("Alerte 3 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
+			}
+			foreach (City c in s.getUsedCities()) {
+				List<City> cities = LieuxDeFormation.MainClass.getCities();
+				Solution sp;
+				do {
+					City city = cities[rand.Next(cities.Count)];
+					sp = s.give(c, city);
+				} while(sp == null);
+				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)
+					min = sp;
 			}
 			return min;
 		}
