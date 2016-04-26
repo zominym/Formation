@@ -70,13 +70,19 @@ namespace LieuxDeFormation
 //			Console.WriteLine(s);
 //			Console.WriteLine(s.toStringShort());
 
-			Taboo taboo = new Taboo(agencies, cities);
-			Solution s = taboo.run(10000);
-			Console.WriteLine(s);
-			Console.WriteLine(s.toStringShort());
-			Solution sp = s.getGradientDescendSolution();
-			Console.WriteLine(sp);
-			Console.WriteLine(sp.toStringShort());
+			//Taboo taboo = new Taboo(agencies, cities);
+			//Solution s = taboo.run(10000);
+            for (int i = 0; i < 999999999999999999; i++)
+            {
+                SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
+                Solution s = sim.run(10000, 1, i);
+                Console.WriteLine(s);
+                Console.WriteLine(s.toStringShort());
+                Solution sp = s.getGradientDescendSolution();
+                Console.WriteLine(sp);
+                Console.WriteLine(sp.toStringShort());
+            }
+
 
 
 

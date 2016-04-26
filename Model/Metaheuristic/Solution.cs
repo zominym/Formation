@@ -14,6 +14,7 @@ namespace Metaheuristic
 
 		private double _cost = -1;
         private List<Solution> _neighbors = null;
+        private List<Solution> _neighbors2 = null;
 		private Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
 
@@ -122,6 +123,15 @@ namespace Metaheuristic
             }
         }
 
+        public List<Solution> Neighbors2
+        {
+            get { 
+                if (_neighbors2 == null)
+                    buildNeighborhood2();
+                return _neighbors2;
+            }
+        }
+
 		public double Cost {
 			get {
 				return calculateCost();
@@ -139,6 +149,26 @@ namespace Metaheuristic
 					if (tmp != null)
                     	_neighbors.Add(tmp);
                 }
+            }
+        }
+
+
+        private void buildNeighborhood2()
+        {
+            _neighbors2 = new List<Solution>();
+            int tirage, capacityRequired;
+            List<City> _cities = LieuxDeFormation.MainClass.getCities();
+            for (int i = 0; i < _tuples.Length; i++){
+                Solution tmp = new Solution(this);
+                do
+                {
+                    tirage = rand.Next(_cities.Count);
+                    capacityRequired = _tuples[i].Item1.getNbPers() + this.getNbPers(_cities[tirage]);
+                } while (capacityRequired > CITYCAPACITY);
+
+                _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, _cities[tirage]);
+                if (tmp != null)
+                    _neighbors2.Add(tmp);
             }
         }
 
