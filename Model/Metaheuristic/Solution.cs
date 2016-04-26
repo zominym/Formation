@@ -126,7 +126,10 @@ namespace Metaheuristic
 
 		public double Cost {
 			get {
-				return calculateCost();
+                if (_cost != -1)
+                    return _cost;
+                else
+                    return (_cost = calculateCost());
 			}
 		}
             
@@ -437,18 +440,21 @@ namespace Metaheuristic
 
         private double calculateCost()
         {
-            double dist = 0;
-			double totalTripFee = 0;
-            double agenciesFee = 0;
-//            List<City> centers = new List<City>();
-
-            for(int i = 0; i < _tuples.Length; i++)
+            double tripFee = 0, agenciesFee = 0;
+            List<City> centers = new List<City>();
+            City c;
+            for (int i = 0; i < _tuples.Length; ++i)
             {
-				dist += _tuples[i].Item1.distanceTo(_tuples[i].Item2) * _tuples[i].Item1.getNbPers();
+                c = _tuples[i].Item2;
+                tripFee += _tuples[i].Item1.distanceTo(c) * TRANSPORTFEE * 2 * _tuples[i].Item1.getNbPers();
+                if (!centers.Contains(c))                
+                {
+                    agenciesFee += AGENCYFEE;
+                    centers.Add(c);
+                }
             }
-			totalTripFee = dist * TRANSPORTFEE * 2;
-			agenciesFee = getUsedCities().Count * AGENCYFEE;
-			return totalTripFee + agenciesFee;
+            
+            return tripFee + agenciesFee;
         }
 
 		public bool containCity(List<City> cities, City city) {
