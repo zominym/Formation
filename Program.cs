@@ -25,7 +25,7 @@ namespace LieuxDeFormation
 
 		// BROUILLON
 		/*
-		 * 
+		 *
 		 * - Une solution : Hashmap d'agences qui ont un centre de formation (une ville)
 		 * 		- Remarque : On laisse les personnes d'une agence dans le même centre de formation.
 		 * - La fonction à minimiser : TODO
@@ -33,11 +33,11 @@ namespace LieuxDeFormation
 		 * 		- Remarque : On peut mettre une limite à la distance maximale d'un déplacement (On ne peut pas affecter une agence à un centre éloigné de plus de X (e.g. 500) Km
 		 * - Le croisement :
 		 * - La mutation :
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
+		 *
          */
 
 
@@ -52,10 +52,10 @@ namespace LieuxDeFormation
 			cities = loadCities();
 
 
-//            Genetic algo = new Genetic(agencies, cities, 1000, 100);
-//			Solution s = algo.getSolution();
-//			Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
+            Genetic algo = new Genetic(agencies, cities, 10000, 20);
+			Solution s = algo.getSolution();
+    		Console.WriteLine(s);
+			Console.WriteLine(s.toStringShort());
 
 
 //			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
@@ -65,24 +65,15 @@ namespace LieuxDeFormation
 //			tuples1[0] = new Tuple<int,int>(30, 40);
 //			Console.WriteLine(tuples2[0]);
 
-//			Solution s = new Solution(10, 10, 1000);
-//			Console.WriteLine(s.calculateCostBavard());
-//			Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
-
-			//Taboo taboo = new Taboo(agencies, cities);
-			//Solution s = taboo.run(10000);
-            for (int i = 0; i < 999999999999999999; i++)
-            {
-                SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
-                Solution s = sim.run(10000, 1, i);
-                Console.WriteLine(s);
-                Console.WriteLine(s.toStringShort());
-                Solution sp = s.getGradientDescendSolution();
-                Console.WriteLine(sp);
-                Console.WriteLine(sp.toStringShort());
-            }
-
+            /*
+			Taboo taboo = new Taboo(agencies, cities);
+			Solution s = taboo.run(10000);
+			Console.WriteLine(s);
+			Console.WriteLine(s.toStringShort());
+			Solution sp = s.getGradientDescendSolution();
+			Console.WriteLine(sp);
+			Console.WriteLine(sp.toStringShort());
+            */
 
 
 
