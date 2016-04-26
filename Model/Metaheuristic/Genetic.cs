@@ -172,7 +172,7 @@ namespace Metaheuristic
                     if((crossResult = elite[rand.Next(elite.Count)].crossover(elite[rand.Next(elite.Count)])) != null)
                     nextPopulation.AddRange(crossResult);
                     if (ProbaCross > rand.NextDouble())
-						nextPopulation[rand.Next(nextPopulation.Count)].mutate();
+						nextPopulation[rand.Next(nextPopulation.Count)].mutation();
                 }
                 currentPopulation = nextPopulation;
 				/*
