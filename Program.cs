@@ -25,7 +25,7 @@ namespace LieuxDeFormation
 
 		// BROUILLON
 		/*
-		 * 
+		 *
 		 * - Une solution : Hashmap d'agences qui ont un centre de formation (une ville)
 		 * 		- Remarque : On laisse les personnes d'une agence dans le même centre de formation.
 		 * - La fonction à minimiser : TODO
@@ -33,11 +33,11 @@ namespace LieuxDeFormation
 		 * 		- Remarque : On peut mettre une limite à la distance maximale d'un déplacement (On ne peut pas affecter une agence à un centre éloigné de plus de X (e.g. 500) Km
 		 * - Le croisement :
 		 * - La mutation :
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
+		 *
          */
 
 

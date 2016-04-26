@@ -14,6 +14,7 @@ namespace Metaheuristic
 
 		private double _cost = -1;
         private List<Solution> _neighbors = null;
+        private List<Solution> _neighbors2 = null;
 		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
 		public static double nbSuccess = 1;
@@ -117,10 +118,19 @@ namespace Metaheuristic
 
         public List<Solution> Neighbors
         {
-            get { 
+            get {
 				if (_neighbors == null)
                     buildNeighborhood();
                 return _neighbors;
+            }
+        }
+
+        public List<Solution> Neighbors2
+        {
+            get {
+                if (_neighbors2 == null)
+                    buildNeighborhood2();
+                return _neighbors2;
             }
         }
 
@@ -132,18 +142,38 @@ namespace Metaheuristic
                     return (_cost = calculateCost());
 			}
 		}
-            
+
         private void buildNeighborhood()
         {
             _neighbors = new List<Solution>();
             for (int i = 0; i < _tuples.Length; i++)
             {
-                for (int j = i + 1; j < _tuples.Length; j++) 
+                for (int j = i + 1; j < _tuples.Length; j++)
                 {
                     Solution tmp = swap(i, j);
 					if (tmp != null)
                     	_neighbors.Add(tmp);
                 }
+            }
+        }
+
+
+        private void buildNeighborhood2()
+        {
+            _neighbors2 = new List<Solution>();
+            int tirage, capacityRequired;
+            List<City> _cities = LieuxDeFormation.MainClass.getCities();
+            for (int i = 0; i < _tuples.Length; i++){
+                Solution tmp = new Solution(this);
+                do
+                {
+                    tirage = rand.Next(_cities.Count);
+                    capacityRequired = _tuples[i].Item1.getNbPers() + this.getNbPers(_cities[tirage]);
+                } while (capacityRequired > CITYCAPACITY);
+
+                _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, _cities[tirage]);
+                if (tmp != null)
+                    _neighbors2.Add(tmp);
             }
         }
 
@@ -265,7 +295,7 @@ namespace Metaheuristic
             }
         }
 
-		public Solution mutate(){   
+		public Solution mutate(){
             List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
 //            Console.WriteLine("BEFORE : "+this);
@@ -283,7 +313,7 @@ namespace Metaheuristic
 //            Console.WriteLine("NOW : "+temp);
 			return temp;
             //return new Solution();
-            
+
         }
 
 		public Solution mutate(int n) {
@@ -391,7 +421,7 @@ namespace Metaheuristic
             int MAX_TRIES = 10;
 //			Console.WriteLine("Debut du crossover");
 			Solution son, daughter;
-			
+
             while (MAX_TRIES > 0)
             {
 				son = new Solution(this);
@@ -403,7 +433,7 @@ namespace Metaheuristic
                     son._tuples[i] = new Tuple<Agency, City>(a, mother._tuples[i].Item2);
                     daughter._tuples[i] = new Tuple<Agency, City>(a, this._tuples[i].Item2);
                 }
-               
+
 				if (son.validateCities() && daughter.validateCities())
                 {
                     List<Solution> result = new List<Solution>();
@@ -411,7 +441,7 @@ namespace Metaheuristic
                     result.Add(daughter);
                     return result;
                 }
-                    
+
                 MAX_TRIES--;
 			}
             Console.Write("■ ");
@@ -432,9 +462,9 @@ namespace Metaheuristic
                     if (cities[c] > CITYCAPACITY)
                         return false;
                 }
-                    
+
             }
-            
+
             return true;
         }
 
@@ -480,8 +510,8 @@ namespace Metaheuristic
                     best = neighbor;
             return best;
         }
-            
-			
+
+
         public override string ToString(){
             string str = "";
             for (int i = 0; i < _tuples.Length; i++)
