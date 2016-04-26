@@ -128,7 +128,85 @@ namespace Metaheuristic
 			return temp;
 		}
 
-		public Solution mutate(){   
+		public void mutate(){
+            int MAX_TRIES = 5;
+            this._cost = -1;
+
+            // Selecting one tuple randomly
+            int targeted = rand.Next(_tuples.Length);
+            // Saving the current city
+            Tuple<Agency, City> old = _tuples[targeted];
+            do
+            {
+                // Restore the previous one
+                _tuples[targeted] = old;
+                // Targeting one Tuple
+                targeted = rand.Next(_tuples.Length);
+                // Saving current state
+                old = _tuples[targeted];
+                // Affecting to an other city
+                _tuples[targeted] = new Tuple<Agency, City>(_tuples[targeted].Item1, _tuples[rand.Next(_tuples.Length)].Item2);
+                MAX_TRIES--;
+            } while (!this.validateCities() && MAX_TRIES > 0);
+
+            if (MAX_TRIES <= 0)
+            {
+                //Console.Write("▀ ");
+                // Restore and validate
+                _tuples[targeted] = old;
+                                
+                MAX_TRIES = 50;
+                Dictionary<int, City> olders = new Dictionary<int, City>();
+                do
+                {
+                    // Restore previous state
+                    if (olders.Count > 0)
+                        foreach (int i in olders.Keys)
+                            _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, olders[i]);
+
+                    olders.Clear();
+
+                    // Chose a targeted city
+                    City chosen = _tuples[rand.Next(_tuples.Length)].Item2;
+                    // Chose a new location for the occurences of the city
+                    City newLocation = MainClass.getCities()[rand.Next(MainClass.getCities().Count)];
+               
+                    // Change the targeted city in all tuples concerned
+                    for (int i = 0; i < _tuples.Length; ++i)
+                    {
+                        if(_tuples[i].Item2 == chosen)
+                        {
+                            // Saving current state
+                            olders.Add(i, _tuples[i].Item2);
+                            // Changing location
+                            _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, newLocation);
+                        }
+                            
+                    }
+                    MAX_TRIES--;
+                } while (!this.validateCities() && MAX_TRIES > 0);
+                
+
+                if (MAX_TRIES <= 0)
+                {
+                    //Console.Write("▄ ");
+
+                    // Restore
+                    if (olders.Count > 0)
+                        foreach (int i in olders.Keys)
+                            _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, olders[i]);
+
+                    // Randomise one tuple
+                    _tuples[targeted] = new Tuple<Agency, City>(_tuples[targeted].Item1, MainClass.getCities()[rand.Next(MainClass.getCities().Count)]);
+
+                    // Last check
+                    if (!this.validateCities())
+                        _tuples[targeted] = old;
+                }
+                    
+            }
+                
+            /*   
             List<City> cities = MainClass.getCities();
 			Solution temp = new Solution(this);
 //            Console.WriteLine("BEFORE : "+this);
@@ -146,7 +224,8 @@ namespace Metaheuristic
 //            Console.WriteLine("NOW : "+temp);
 			return temp;
             //return new Solution();
-		}
+            */
+            }
 
 		public Solution mutate(int n) {
 			List<City> _cities = LieuxDeFormation.MainClass.getCities();
@@ -188,60 +267,63 @@ namespace Metaheuristic
 			return nb;
 		}
 
-        public List<Solution> crossover(Solution y)
+        public List<Solution> recombination(Solution mother)
+        {
+            int MAX_TRIES = 10;
+            Solution son, daughter;
+
+            return null;
+        }
+
+        public List<Solution> crossover(Solution mother)
 		{
+            int MAX_TRIES = 10;
 //			Console.WriteLine("Debut du crossover");
-			Solution fils;
-            Solution fille;
-			bool loop = true;
-			do {
-				fils = new Solution(this);
-                fille = new Solution(this);
+			Solution son, daughter;
+			
+            while (MAX_TRIES > 0)
+            {
+				son = new Solution(this);
+                daughter = new Solution(mother);
 
-				int i = 0;
-//				Console.WriteLine("CROSSOVER");
-				foreach (Agency a in MainClass.getAgencies()) {
-
-//					Console.WriteLine("PARENT 1 : ");
-//					Console.WriteLine(this._tuples[i].Item2);
-//					Console.WriteLine("PARENT 2 : ");
-//					Console.WriteLine(y._tuples[i].Item2);
-					City c, c2;
-					if (rand.NextDouble() < 0.5) {
-//						Console.WriteLine("SELECTED PARENT 1");
-						c = new City(this._tuples[i].Item2);
-                        c2 = new City(y._tuples[i].Item2);
-                    }
-					else {
-//						Console.WriteLine("SELECTED PARENT 2");
-						c = new City(y._tuples[i].Item2);
-                        c2 = new City(this._tuples[i].Item2);
-                    }
+				for(int i = rand.Next(_tuples.Length); i < _tuples.Length ; ++i)
+                {
+                    Agency a = this._tuples[i].Item1;
+                    son._tuples[i] = new Tuple<Agency, City>(a, mother._tuples[i].Item2);
+                    daughter._tuples[i] = new Tuple<Agency, City>(a, this._tuples[i].Item2);
+                }
+               
+				if (son.validateCities() && daughter.validateCities())
+                {
+                    List<Solution> result = new List<Solution>();
+                    result.Add(son);
+                    result.Add(daughter);
+                    return result;
+                }
                     
-                    fils._tuples[i] = new Tuple<Agency, City>(a, c);
-                    fille._tuples[i] = new Tuple<Agency, City>(a, c2);
-
-                    i++;
-				}
-				if (fils.validateCities() && fille.validateCities()) {
-					loop = false;
-//					Console.WriteLine(temp);
-				}
-			} while (loop);
-
-            //			Console.WriteLine(temp.toStringShort());
-            //			Console.WriteLine("Fin du crossover");
-            List<Solution> result = new List<Solution>();
-            result.Add(fils);
-            result.Add(fille);
-            return result;
+                MAX_TRIES--;
+			}
+            Console.Write("■ ");
+            return null;
         }
 
         public Boolean validateCities()
         {
-			foreach (City c in LieuxDeFormation.MainClass.getCities())
-				if (this.getNbPers(c) > CITYCAPACITY)
-                    return false;
+            Dictionary<City, int> cities = new Dictionary<City, int>();
+            for (int i = 0; i < _tuples.Length; ++i)
+            {
+                City c = _tuples[i].Item2;
+                if (!cities.ContainsKey(c))
+                    cities.Add(c, _tuples[i].Item1.getNbPers());
+                else
+                {
+                    cities[c] += _tuples[i].Item1.getNbPers();
+                    if (cities[c] > CITYCAPACITY)
+                        return false;
+                }
+                    
+            }
+            
             return true;
         }
 
@@ -260,6 +342,7 @@ namespace Metaheuristic
 					centers.Add(_tuples[i].Item2);
                 }
             }
+
             return tripFee + agenciesFee;
         }
 
@@ -290,7 +373,7 @@ namespace Metaheuristic
 				str += "CITY " + " " + _tuples[i].Item2.getId();
 				str += "\n";
             }
-			str += "COST : " + Cost;
+			str += "COST : " + this.calculateCost();
 			str += "\nID : " + id;
             return str;
 		}
@@ -298,12 +381,16 @@ namespace Metaheuristic
 		public string toStringShort() {
 			string str = "";
 			int sum = 0;
+            int nbCenters = 0, number = 0;
 			foreach (City c in LieuxDeFormation.MainClass.getCities())
 			{
-				str += " " + this.getNbPers(c);
-				sum += this.getNbPers(c);
+                number = this.getNbPers(c);
+                str += " " + number;
+				sum += number;
+                if (number > 0)
+                    nbCenters++;
 			}
-			return str + " : " + sum;
+			return str + " : " + sum + '\n' + "Total agencies : " + nbCenters;
 		}
 
 		public int getPersTot() {

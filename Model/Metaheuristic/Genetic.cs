@@ -51,6 +51,44 @@ namespace Metaheuristic
             return min;
         }
 
+        public List<Solution> RouletteVladof(List<Solution> population, int nbToTake)
+        {
+            // place your bets, put your chips on the table
+            List<Solution> result = new List<Solution>();
+            Dictionary<double, Solution> wheel = new Dictionary<double, Solution>();
+
+            double T = 0, sum = 0;
+            foreach (Solution sol in population)
+            {
+                T += sol.Cost;
+            }
+            double last = 0;
+            foreach (Solution sol in population)
+            {
+                sum += (T - sol.Cost);
+                wheel.Add(last + (T - sol.Cost), sol);
+                last = wheel.Last().Key;
+            }
+            
+            // end of bets, nothing goes on the table
+            double aleaJactaEst;
+            for (int i = 0; i < nbToTake; ++i)
+            {
+                aleaJactaEst = rand.NextDouble() * sum;
+                foreach (double key in wheel.Keys)
+                {
+                    if (key >= aleaJactaEst)
+                    {
+                        result.Add(wheel[key]);
+                        break;
+                    }
+                }
+                    
+            }
+
+            return result;
+        }
+
         public List<Solution> RouletteSelection(List<Solution> population, int nbToTake){
             double totalEfficiency = 0;
             List<Solution> result = new List<Solution>();
@@ -120,26 +158,24 @@ namespace Metaheuristic
             return result;
         }
 
-        public Solution getSolution(){
-            double ProbaCross = 0.0;
-            List<Solution> nextPopulation, tmp, currentPopulation = buildPopulation();
+        public Solution getSolution() {
+            double ProbaCross = 0.99;
+            List<Solution> nextPopulation, elite, crossResult, currentPopulation = buildPopulation();
             Solution bestSolution = getBestSolution(currentPopulation);
+            
             for (int i = 0; i < Iterations; i++) {
-				if (i % 1 == 0)
-                	Console.Write(" ITE "+i);
-				nextPopulation = RouletteSelection(currentPopulation, currentPopulation.Count / 2);
-                tmp = new List<Solution>(nextPopulation);
-                for (int j = nextPopulation.Count; j < currentPopulation.Count; j++) {
-					if (ProbaCross > rand.NextDouble()) {
-						int rand1 = rand.Next(tmp.Count);
-						int rand2 = rand.Next(tmp.Count);
-                        nextPopulation.AddRange(tmp[rand1].crossover(tmp[rand2]));
-					}
-                    else
-                        nextPopulation.Add(tmp[rand.Next(tmp.Count)].mutate());
+                //Console.WriteLine(" ITE " + i);
+				nextPopulation = RouletteVladof(currentPopulation, currentPopulation.Count / 2);
+                elite = new List<Solution>(nextPopulation);
+                
+                while(nextPopulation.Count < currentPopulation.Count) {
+                    if((crossResult = elite[rand.Next(elite.Count)].crossover(elite[rand.Next(elite.Count)])) != null)
+                    nextPopulation.AddRange(crossResult);
+                    if (ProbaCross > rand.NextDouble())
+						nextPopulation[rand.Next(nextPopulation.Count)].mutate();
                 }
                 currentPopulation = nextPopulation;
-				if (i % 1 == 0) {
+				/*
 					foreach (Solution s in currentPopulation) {
 						//Console.WriteLine(s);
 					}
@@ -147,7 +183,8 @@ namespace Metaheuristic
 						//Console.WriteLine(s.Cost);
 						//Console.WriteLine(s.id);
 					}
-				}
+                */
+                Console.WriteLine(getBestSolution(currentPopulation).Cost);
                 if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)
                     bestSolution = getBestSolution(currentPopulation);
             }
