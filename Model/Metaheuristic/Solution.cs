@@ -45,6 +45,42 @@ namespace Metaheuristic
             }
         }
 
+		public Solution(string s) {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
+			List<Agency> _agencies = LieuxDeFormation.MainClass.getAgencies();
+			id = ID + 1;
+			ID++;
+			int tirage, capacityRequired;
+			for (int i = 0; i < _agencies.Count; i++) {
+				List<City> cities = getUsedCities();
+				City canFit = null;
+				City exactFit = null;
+				foreach (City city in cities) {
+					int nbPersCity = getNbPers(city);
+					if (nbPersCity + _agencies[i].getNbPers() <= CITYCAPACITY) {
+						canFit = city;
+						if (nbPersCity + _agencies[i].getNbPers() == CITYCAPACITY)
+							exactFit = city;
+					}
+				}
+				if (canFit == null) {
+					do
+					{
+						tirage = rand.Next(_cities.Count);
+						capacityRequired = _agencies[i].getNbPers() + this.getNbPers(_cities[tirage]);
+					} while (capacityRequired > CITYCAPACITY);
+					canFit = _cities[tirage];
+				}
+				else {
+					if (exactFit != null)
+						canFit = exactFit;
+				}
+
+				_tuples[i] = new Tuple<Agency, City>(_agencies[i], canFit);
+				cities = null;
+			}
+		}
+
 		public Solution(int nbCentres) {
 			List<City> _cities = LieuxDeFormation.MainClass.getCities();
 			List<Agency> _agencies = LieuxDeFormation.MainClass.getAgencies();
@@ -326,7 +362,7 @@ namespace Metaheuristic
 				if (rnd < 0.5)
 					c = _cities[rand.Next(_cities.Count)];
 				else {
-					List<City> gUC = getUsedCities();
+					List<City> gUC = temp.getUsedCities();
 					c = gUC[rand.Next(gUC.Count)];
 				}
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
@@ -350,7 +386,8 @@ namespace Metaheuristic
 //					proba =  offset / centresIdeal;
 				if (rand.NextDouble() < 0.5 /*nbSuccess / nbTries*/) {
 					List<City> gUC = getUsedCities();
-					City c = gUC[rand.Next(gUC.Count)];
+					int rnd = rand.Next(gUC.Count);
+					City c = gUC[rnd];
 					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY) {
 						loop = false;
 						nbSuccess += 1;
