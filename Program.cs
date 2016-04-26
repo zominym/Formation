@@ -15,7 +15,7 @@ namespace LieuxDeFormation
 	class MainClass
 	{
 		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		const string agenciesFile = "../../ListeAgences_100.txt";
 
 		const int MAXPERS = 60;
 		static List<Agency> agencies;
@@ -70,9 +70,9 @@ namespace LieuxDeFormation
 			Solution s = taboo.run(1000);
 			Console.WriteLine(s);
 			Console.WriteLine(s.toStringShort());
-			Solution sp = s.getGradientDescendSolution();
-			Console.WriteLine(sp);
-			Console.WriteLine(sp.toStringShort());
+			//Solution sp = s.getGradientDescendSolution();
+			//Console.WriteLine(sp);
+			//Console.WriteLine(sp.toStringShort());
 
 
 

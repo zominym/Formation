@@ -375,6 +375,42 @@ namespace Metaheuristic
 			return temp;
 		}
 
+		public Solution mutate2a(int n) {
+			Solution temp = new Solution(this);
+			bool loop = true;
+			do {
+					List<City> cities = LieuxDeFormation.MainClass.getCities();
+					City c = cities[rand.Next(cities.Count)];
+					temp.swap(temp._tuples[n].Item2, c);
+					loop = false;
+			} while (loop);
+			return temp;
+		}
+
+		public Solution mutate2b(int n) {
+			Solution temp = new Solution(this);
+			bool loop = true;
+			do {
+					// échanger deux agences de deux centres ouverts entre elles
+					int i1 = rand.Next(_tuples.Length);
+					int i2 = rand.Next(_tuples.Length);
+
+					Agency a1 = temp._tuples[i1].Item1;
+					Agency a2 = temp._tuples[i2].Item1;
+
+					City c1 = temp._tuples[i1].Item2;
+					City c2 = temp._tuples[i2].Item2;
+
+					if (temp.getNbPers(c1) + a2.getNbPers() - a1.getNbPers() <= CITYCAPACITY
+						&& temp.getNbPers(c2) + a1.getNbPers() - a2.getNbPers() <= CITYCAPACITY) {
+						loop = false;
+						temp._tuples[i1] = new Tuple<Agency, City>(a1, c2);
+						temp._tuples[i2] = new Tuple<Agency, City>(a2, c1);
+					}
+				} while (loop);
+			return temp;
+		}
+
 		public Solution mutate2(int n) {
 			Solution temp = new Solution(this);
 			bool loop = true;
@@ -384,20 +420,20 @@ namespace Metaheuristic
 //				double proba = 0;
 //				if (offset != 0)
 //					proba =  offset / centresIdeal;
-				if (rand.NextDouble() < 0.5 /*nbSuccess / nbTries*/) {
-					List<City> gUC = getUsedCities();
-					int rnd = rand.Next(gUC.Count);
-					City c = gUC[rnd];
-					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY) {
-						loop = false;
-						nbSuccess += 1;
-						temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
-					}
-					//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
-					//						loop = true;
-					nbTries += 1;
-				}
-				else if (rand.NextDouble() < 0.5) {
+//				if (rand.NextDouble() < 0.5 /*nbSuccess / nbTries*/) {
+//					List<City> gUC = getUsedCities();
+//					int rnd = rand.Next(gUC.Count);
+//					City c = gUC[rnd];
+//					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY) {
+//						loop = false;
+//						nbSuccess += 1;
+//						temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+//					}
+//					//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
+//					//						loop = true;
+//					nbTries += 1;
+//				}
+				/*else */if (rand.NextDouble() < 0.5) {
 					List<City> cities = LieuxDeFormation.MainClass.getCities();
 					City c = cities[rand.Next(cities.Count)];
 					temp.swap(temp._tuples[n].Item2, c);

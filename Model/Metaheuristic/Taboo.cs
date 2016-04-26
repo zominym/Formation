@@ -23,20 +23,21 @@ namespace Metaheuristic
 		public Solution run(int nbIter) {
 			int nbVoisins = LieuxDeFormation.MainClass.getAgencies().Count;
 			Solution min = new Solution("peu de centres");
+//			Solution min = new Solution();
 			Solution s = min;
 			Console.WriteLine("INIT --> " + "cost actuel : " + s.Cost);
 //			Console.WriteLine(s.toStringShort());
 			for (int i = 0; i < nbIter; i++) {
 //				if (s.getPersTot() != 522)
 //					Console.WriteLine("Alerte 1 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
-				s = visit2(s);
+				s = visit(s);
 				if (s.Cost < min.Cost)
 					min = s;
 //				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
 				Console.WriteLine("ITER: " + i + " --> " + "actuel: " + s.Cost + " min: " + min.Cost + " centres: " + s.getUsedCities().Count);
-				Console.WriteLine(Solution.nbSuccess/Solution.nbTries);
+//				Console.WriteLine(Solution.nbSuccess/Solution.nbTries);
 //				s.calculateCostBavard();
 //				Console.WriteLine(s.toStringShort());
 			}
@@ -47,7 +48,12 @@ namespace Metaheuristic
 			//			Console.WriteLine("Alerte 2 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
 			Solution min = null;
 			for (int i = 0; i < s._tuples.Length; i++) {
-				Solution sp = s.mutate2(i);
+				Solution sp = s.mutate2a(i);
+				if (i == 0)
+					min = sp;
+				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)
+					min = sp;
+				sp = s.mutate2b(i);
 				if (i == 0)
 					min = sp;
 				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)
