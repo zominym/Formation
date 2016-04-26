@@ -15,7 +15,7 @@ namespace LieuxDeFormation
 	class MainClass
 	{
 		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		const string agenciesFile = "../../ListeAgences_100.txt";
 
 		const int MAXPERS = 60;
 		static List<Agency> agencies;
@@ -52,9 +52,9 @@ namespace LieuxDeFormation
 			cities = loadCities();
 
 
-//            Genetic algo = new Genetic(agencies, cities, 1000, 100);
+//            Genetic algo = new Genetic(agencies, cities, 10000, 20);
 //			Solution s = algo.getSolution();
-//			Console.WriteLine(s);
+//    		Console.WriteLine(s);
 //			Console.WriteLine(s.toStringShort());
 
 
@@ -65,10 +65,6 @@ namespace LieuxDeFormation
 //			tuples1[0] = new Tuple<int,int>(30, 40);
 //			Console.WriteLine(tuples2[0]);
 
-//			Solution s = new Solution(10, 10, 1000);
-//			Console.WriteLine(s.calculateCostBavard());
-//			Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
 
 			Taboo taboo = new Taboo(agencies, cities);
 			Solution s = taboo.run(1000);
