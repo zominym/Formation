@@ -72,6 +72,12 @@ namespace LieuxDeFormation
             //			Console.WriteLine(tuples2[0]);
 
 
+
+      //SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
+    	//Solution s = sim.run(50000, 0.4, 100000);
+      //Console.WriteLine(s);
+      //Console.WriteLine(s.toStringShort());
+
 			Taboo taboo = new Taboo(agencies, cities);
 			Solution s = taboo.run(1000);
 			Console.WriteLine(s);
@@ -80,6 +86,7 @@ namespace LieuxDeFormation
 			Console.WriteLine("retrieved : " + City.retrieved);
 
 			s.writeToCSV();
+
 
 			//Solution sp = s.getGradientDescendSolution();
 			//Console.WriteLine(sp);
