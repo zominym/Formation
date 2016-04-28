@@ -399,6 +399,47 @@ namespace Metaheuristic
 			return temp;
 		}
 
+        public Solution mutateSA(){
+            List<City> _cities = LieuxDeFormation.MainClass.getCities();
+            Solution temp = new Solution(this);
+            City newCity;
+            bool yep = false;
+            int n = 0;
+            double maxValue = 0;
+            double cost = 0;
+            bool loop = true;
+            List<City> gUC = temp.getUsedCities();
+            for(int i = 0; i < _tuples.Length; i++)
+            {
+                Agency a = _tuples[i].Item1;
+                City c = _tuples[i].Item2;
+                if ((cost = a.distanceTo(c)) > maxValue)
+                {
+                    n = i;
+                    maxValue = cost;
+                    yep = true;
+                }
+            }
+            if(yep == false)
+                n = rand.Next(LieuxDeFormation.MainClass.getAgencies().Count);
+            do {
+                double rnd = rand.NextDouble();
+                if (rnd < 0.5)
+                    newCity = _cities[rand.Next(_cities.Count)];
+                else {
+                    newCity = gUC[rand.Next(gUC.Count)];
+                }
+                if(_tuples[n].Item1.distanceTo(newCity) < maxValue)
+                    if (temp.getNbPers(newCity) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
+                        loop = false;
+            } while (loop);
+                
+            temp._cost = -1;
+            temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, newCity);
+
+            return temp;
+        }
+
 		public Solution mutate(int n, List<City> gUC) {
 			List<City> _cities = LieuxDeFormation.MainClass.getCities();
 			Solution temp = new Solution(this);
