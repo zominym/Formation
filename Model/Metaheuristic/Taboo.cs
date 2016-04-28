@@ -27,7 +27,7 @@ namespace Metaheuristic
 //			_agencies = agencies;
 //			_cities = cities;
 			_visited = new List<double>();
-			sw = new StreamWriter(File.Create(DateTime.Now.ToString("ITERS dd_mm_yy HH_mm_ss") + ".csv"));
+			sw = new StreamWriter(File.Create(DateTime.Now.ToString("ITERS dd_mm_yy HH-mm-ss") + ".csv"));
 		}
 
 		public Solution run(int nbIter) {
@@ -37,9 +37,11 @@ namespace Metaheuristic
 			Solution s = min;
 			sw.WriteLine("\"cout\";\"distanceTotale\";\"nbcentres\"");
 			sw.WriteLine(s.toCSVShort());
-			Console.WriteLine("INIT --> " + "cost actuel : " + s.Cost);
-//			Console.WriteLine(s.toStringShort());
-			for (int i = 0; i < nbIter; i++) {
+            Console.SetCursorPosition(0, Console.CursorTop);
+            //Console.Write("INIT --> " + "cost actuel : " + s.Cost);
+            Console.WriteLine("Iteration\tActual\t\tMin\t\tCenters");
+            //			Console.WriteLine(s.toStringShort());
+            for (int i = 0; i < nbIter; i++) {
 //				if (s.getPersTot() != 522)
 //					Console.WriteLine("Alerte 1 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
 				s = visit(s);
@@ -50,7 +52,8 @@ namespace Metaheuristic
 //				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
-				Console.WriteLine("ITER: " + i + " --> " + "actuel: " + s.Cost + " min: " + min.Cost + " centres: " + s.getUsedCities().Count);
+                Console.SetCursorPosition(0, Console.CursorTop);
+				Console.Write(i + "\t\t" + (int) s.Cost + "\t\t" + (int) min.Cost + "\t\t" + s.getUsedCities().Count);
 //				Console.WriteLine(Solution.nbSuccess/Solution.nbTries);
 //				s.calculateCostBavard();
 //				Console.WriteLine(s.toStringShort());

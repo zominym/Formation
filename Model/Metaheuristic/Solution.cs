@@ -16,7 +16,6 @@ namespace Metaheuristic
         const int CITYCAPACITY = 60;
 
         private double _cost = -1;
-        private int _centers = -1;
         private List<Solution> _neighbors = null;
         private List<Solution> _neighbors2 = null;
 
@@ -24,6 +23,7 @@ namespace Metaheuristic
 		public static double nbSuccess = 1;
 		public static double nbTries = 1;
 		public int id;
+
 
 		// Constructeur de solution aléatoire
 		public Solution() {
@@ -150,7 +150,6 @@ namespace Metaheuristic
 			id = ID + 1;
 			ID++;
 			_cost = -1;
-            _centers = -1;
 			for (int i = 0; i < _tuples.Length; i++)
 				_tuples[i] = s._tuples[i];
 			_neighbors = s._neighbors;
@@ -191,7 +190,7 @@ namespace Metaheuristic
                 if (_centers != -1)
                     return _centers;
                 else */
-                    return (_centers = calculateCenters());
+                    return (calculateCenters());
             }
         }
 
@@ -674,7 +673,7 @@ namespace Metaheuristic
                     if ((dist = a.distanceTo(c)) < distMin && (centers[c] + a.getNbPers()) <= CITYCAPACITY)
                     {
                         min = c;
-                        distMin = a.distanceTo(c);
+                        distMin = dist;
                     }
                 }
                 // Assign to the new one
@@ -813,7 +812,7 @@ namespace Metaheuristic
 		}
 
 		public void writeToCSV() {
-			StreamWriter sw = new StreamWriter(File.Create(DateTime.Now.ToString("RESULT dd_mm_yy HH:mm:ss") + ".csv"));
+			StreamWriter sw = new StreamWriter(File.Create(DateTime.Now.ToString("RESULT dd_mm_yy HH-mm-ss") + ".csv"));
 			sw.WriteLine("\"latitude1\";\"longitude1\";\"nbpersonne1\";\"latitude2\";\"longitude2\"");
 			foreach (Tuple<Agency, City> t in _tuples) {
 				sw.WriteLine(t.Item1.getLat() + ";" + t.Item1.getLong() + ";" + t.Item1.getNbPers() + ";" + t.Item2.getLat() + ";" + t.Item2.getLong());
