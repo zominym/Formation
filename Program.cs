@@ -69,7 +69,10 @@ namespace LieuxDeFormation
 			Taboo taboo = new Taboo(agencies, cities);
 			Solution s = taboo.run(1000);
 			Console.WriteLine(s);
-			Console.WriteLine(s.toStringShort());
+
+			s.writeToCSV();
+
+
 			//Solution sp = s.getGradientDescendSolution();
 			//Console.WriteLine(sp);
 			//Console.WriteLine(sp.toStringShort());

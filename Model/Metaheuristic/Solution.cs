@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TrainingProblem;
 using LieuxDeFormation;
+using System.IO;
 
 namespace Metaheuristic
 {
@@ -612,6 +613,26 @@ namespace Metaheuristic
                     nbCenters++;
 			}
 			return str + " ; nbPersTot : " + sum + " ; nbCentres : " + getUsedCities().Count;
+		}
+
+		public void writeToCSV() {
+			StreamWriter sw = new StreamWriter(File.Create(DateTime.Now.ToString("RESULT dd_mm_yy HH:mm:ss") + ".csv"));
+			sw.WriteLine("\"latitude1\";\"longitude1\";\"nbpersonne1\";\"latitude2\";\"longitude2\"");
+			foreach (Tuple<Agency, City> t in _tuples) {
+				sw.WriteLine(t.Item1.getLat() + ";" + t.Item1.getLong() + ";" + t.Item1.getNbPers() + ";" + t.Item2.getLat() + ";" + t.Item2.getLong());
+			}
+			sw.Close();
+		}
+
+		public string toCSVShort() {
+			return Cost + ";" + getDist() + ";" + getUsedCities().Count;
+		}
+
+		public double getDist() {
+			double dist = 0;
+			foreach (Tuple<Agency, City> t in _tuples)
+				dist += t.Item1.distanceTo(t.Item2) * t.Item1.getNbPers();
+			return dist;
 		}
 
 		public int getPersTot() {

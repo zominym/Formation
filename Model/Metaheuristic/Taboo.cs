@@ -1,11 +1,20 @@
 ﻿using System;
 using TrainingProblem;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Metaheuristic
 {
 	public class Taboo
 	{
+
+		/*
+		 * "longitude1";"latitude1";"nbpersonne1";"longitude2";"latitude2"
+		 *
+		 *	"cout";"distanceTotale";"nbcentres"
+		 */
+
+		StreamWriter sw;
 
 //		List<City> _cities;
 //		List<Agency> _agencies;
@@ -18,6 +27,7 @@ namespace Metaheuristic
 //			_agencies = agencies;
 //			_cities = cities;
 			_visited = new List<double>();
+			sw = new StreamWriter(File.Create(DateTime.Now.ToString("ITERS dd_mm_yy HH:mm:ss") + ".csv"));
 		}
 
 		public Solution run(int nbIter) {
@@ -25,6 +35,8 @@ namespace Metaheuristic
 			Solution min = new Solution("peu de centres");
 //			Solution min = new Solution();
 			Solution s = min;
+			sw.WriteLine("\"cout\";\"distanceTotale\";\"nbcentres\"");
+			sw.WriteLine(s.toCSVShort());
 			Console.WriteLine("INIT --> " + "cost actuel : " + s.Cost);
 //			Console.WriteLine(s.toStringShort());
 			for (int i = 0; i < nbIter; i++) {
@@ -33,6 +45,8 @@ namespace Metaheuristic
 				s = visit(s);
 				if (s.Cost < min.Cost)
 					min = s;
+
+				sw.WriteLine(s.toCSVShort());
 //				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
@@ -41,6 +55,7 @@ namespace Metaheuristic
 //				s.calculateCostBavard();
 //				Console.WriteLine(s.toStringShort());
 			}
+			sw.Close();
 			return s;
 		}
 
