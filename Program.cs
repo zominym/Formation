@@ -22,6 +22,7 @@ namespace LieuxDeFormation
 		static List<City> cities;
 		static public Random rand = new Random();
 
+		static public double[,] distTab;
 
 		// BROUILLON
 		/*
@@ -51,6 +52,11 @@ namespace LieuxDeFormation
 			agencies = loadAgencies();
 			cities = loadCities();
 
+			distTab = new double[cities.Count + agencies.Count, cities.Count + agencies.Count];
+			for (int i = 0; i < cities.Count + agencies.Count; i++)
+				for (int j = 0; j < cities.Count + agencies.Count; j++)
+					distTab[i, j] = -1;
+
 
             //Genetic algo = new Genetic(agencies, cities, 2000, 10);
             //Solution s = algo.getSolution();
@@ -77,7 +83,6 @@ namespace LieuxDeFormation
 			//Console.WriteLine(s);
 
 			s.writeToCSV();
-
 
 
 			//Solution sp = s.getGradientDescendSolution();
@@ -197,7 +202,18 @@ namespace LieuxDeFormation
 			return cities;
 		}
 
+        private static bool firstPrinting = true;
 
+        public static void print(int iteration, double cost, double min, int nbCenters)
+        {
+            if(firstPrinting)
+            {
+                Console.WriteLine("Iteration\tActual\t\tMin\t\tCenters");
+                firstPrinting = false;
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(iteration + "\t\t" + (int)cost + "\t\t" + (int)min + "\t\t" + nbCenters);
+        }
 
 
 
