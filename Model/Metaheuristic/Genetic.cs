@@ -12,12 +12,17 @@ namespace Metaheuristic
         private List<City> _cities;
         private int _iterations, _populationSize;
 		private static Random rand = LieuxDeFormation.MainClass.rand;
+		private double ProbaMutation;
+		private double ProbaMagic;
 
-        public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize) {
+
+		public Genetic(List<Agency> agencies, List<City> cities, int iterations, int populationSize, double ProbaMutation, double ProbaMagic) {
             //_agencies = agencies;
             _cities = cities;
             _iterations = iterations;
             _populationSize = populationSize;
+			this.ProbaMutation = ProbaMutation;
+			this.ProbaMagic = ProbaMagic;
         }
 
         int PopulationSize {
@@ -166,8 +171,6 @@ namespace Metaheuristic
         }
 
         public Solution getSolution() {
-            double ProbaMutation = 0.001;
-            double ProbaMagic = 0.0;
             List<Solution> nextPopulation, elite, crossResult, currentPopulation = buildPopulation();
             Solution bestSolution = getBestSolution(currentPopulation), currentBest;
             int bestSolutionCost = (int) bestSolution.Cost;
@@ -206,7 +209,7 @@ namespace Metaheuristic
                 int currentBestCost = (int) currentBest.Cost;
                 Console.SetCursorPosition(0, Console.CursorTop);              
                 Console.Write(currentBestCost  + "\t\t" + currentBest.nbCenters + "\t\t" + i + "/" + Iterations);
-
+				LieuxDeFormation.MainClass.print(i, currentBestCost, bestSolutionCost, currentBest.nbCenters);
                 // Take the legend
                 if (bestSolutionCost > currentBestCost)
                 {

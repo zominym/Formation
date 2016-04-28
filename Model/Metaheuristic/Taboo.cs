@@ -27,7 +27,7 @@ namespace Metaheuristic
 //			_agencies = agencies;
 //			_cities = cities;
 			_visited = new List<double>();
-			sw = new StreamWriter(File.Create(DateTime.Now.ToString("ITERS dd_mm_yy HH-mm-ss") + ".csv"));
+			sw = new StreamWriter(File.Create("outputs/" + DateTime.Now.ToString("ITERS dd_mm_yy HH-mm-ss") + ".csv"));
 		}
 
 		public Solution run(int nbIter) {

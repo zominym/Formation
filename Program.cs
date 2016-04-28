@@ -14,8 +14,8 @@ namespace LieuxDeFormation
 {
 	class MainClass
 	{
-		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		static string citiesFile = "inputs/LieuxPossibles.txt";
+		static string agenciesFile = "inputs/ListeAgences_100.txt";
 
 		public const int MAXPERS = 60;
 		static List<Agency> agencies;
@@ -24,22 +24,8 @@ namespace LieuxDeFormation
 
 		static public double[,] distTab;
 
-		// BROUILLON
-		/*
-		 *
-		 * - Une solution : Hashmap d'agences qui ont un centre de formation (une ville)
-		 * 		- Remarque : On laisse les personnes d'une agence dans le même centre de formation.
-		 * - La fonction à minimiser : TODO
-		 * - Le voisinnage : Echanger les centres de formation de deux agences
-		 * 		- Remarque : On peut mettre une limite à la distance maximale d'un déplacement (On ne peut pas affecter une agence à un centre éloigné de plus de X (e.g. 500) Km
-		 * - Le croisement :
-		 * - La mutation :
-		 *
-		 *
-		 *
-		 *
-		 *
-         */
+		// SETTINGS
+		static public int algo = 0;
 
 
 		public static void Main (string[] args)
@@ -47,45 +33,160 @@ namespace LieuxDeFormation
             // Set current thread culture to en - US.
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
 			//Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine("GUYL Bastien - PLATTEAU Jonathan - ZOMINY Marc");
+			Console.WriteLine("OPTIMISATION DISCRETE 4A POLYTECH INFO");
+			Console.WriteLine(" - PLACE AGENCIES/CITIES IN inputs FOLDER");
+			Console.WriteLine(" - UPLOAD CSV OUTPUTS TO : opti.guyl.me TO SEE THE MAP AND GRAPHS");
+			Console.WriteLine("");
 
-			Console.WriteLine("LOADING AGENCIES AND CITIES ...");
-			agencies = loadAgencies();
-			cities = loadCities();
+
+			bool loop = false;
+			do {
+				Console.WriteLine("TYPE AGENCIES FILENAME");
+				Console.WriteLine("(press enter for default = ListeAgences_100.txt)");
+				agenciesFile = "inputs/" + consoleChoice("ListeAgences_100.txt");
+				Console.Write("LOADING AGENCIES AND CITIES ... ");
+				try {
+					agencies = loadAgencies();
+					cities = loadCities();
+					loop = false;
+				}
+				catch (FileNotFoundException) {
+					Console.WriteLine("FILE NOT FOUND");
+					loop = true;
+				}
+			} while (loop);
+
 
 			distTab = new double[cities.Count + agencies.Count, cities.Count + agencies.Count];
 			for (int i = 0; i < cities.Count + agencies.Count; i++)
 				for (int j = 0; j < cities.Count + agencies.Count; j++)
 					distTab[i, j] = -1;
-
-
-            //Genetic algo = new Genetic(agencies, cities, 2000, 10);
-            //Solution s = algo.getSolution();
-            //Console.WriteLine(s);
-            //Console.WriteLine(s.toStringShort());
-
-
-            //			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
-            //			Tuple<int, int>[] tuples2 = new Tuple<int, int>[10];
-            //			tuples1 [0] = new Tuple<int,int>(20,10);
-            //			tuples2 [0] = tuples1[0];
-            //			tuples1[0] = new Tuple<int,int>(30, 40);
-            //			Console.WriteLine(tuples2[0]);
+			Console.WriteLine("DONE");
 
 
 
-      //SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
-    	//Solution s = sim.run(50000, 0.4, 100000);
-      //Console.WriteLine(s);
-      //Console.WriteLine(s.toStringShort());
+			Console.WriteLine("START SETTING OPTIONS");
+			Console.WriteLine("");
 
-			Taboo taboo = new Taboo(agencies, cities);
-			Solution s = taboo.run(2000);
-			Console.WriteLine(s);
+			Console.WriteLine("CHOOSE ALGORITHM :");
+			Console.WriteLine("(press enter for default = 1)");
+			Console.WriteLine("");
+			Console.WriteLine("1 - DESCEND"); // nb ITeration ( : 2 000 )
+			Console.WriteLine("2 - SIMULATED ANNEALING"); // nb Iteration ( : 50 000), mu(raison geometrique) (0 ~ 1 : 0.3) , temperature init (: 700)
+			Console.WriteLine("3 - GENETIC"); // nb iteration ( : 10 000), population, proba mutation(0 ~ 1 : 0,001), proba magicTrick(0 ~ 1 : 0.1)
+			Console.WriteLine();
+			algo = consoleChoice(1, 3, 1);
 
-			Console.WriteLine("calculated : " + City.calculated);
-			Console.WriteLine("retrieved : " + City.retrieved);
+			switch (algo) {
+			case 1:
+				{
+					Console.Clear();
+					Console.WriteLine("ALGORITHM : 1 - DESCEND");
+					Console.WriteLine("TYPE nbIterations");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 10 000)");
+					Console.WriteLine("(RECOMMENDED 100 AGENCIES -> 10 000");
+					Console.WriteLine("                 500 AGENCIES OR MORE -> 2 000");
+					Console.WriteLine();
+					int nbIter = consoleChoice(1, 1000000, 10000);
+					Console.WriteLine();
 
-			s.writeToCSV();
+					Taboo taboo = new Taboo(agencies, cities);
+					Solution s = taboo.run(nbIter);
+					Console.WriteLine(s);
+					s.writeToCSV();
+
+					break;
+				}
+
+			case 2:
+				{
+					Console.Clear();
+					Console.WriteLine("ALGORITHM : 2 - SIMULATED ANNEALING"); // nb Iteration ( : 50 000), mu(raison geometrique) (0 ~ 1 : 0.3) , temperature init (: 700)
+					Console.WriteLine("TYPE nbIterations");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 50 000)");
+					Console.WriteLine();
+					int nbIter = consoleChoice(1, int.MaxValue, 50000);
+					Console.WriteLine();
+
+					// nb Iteration ( : 50 000), mu(raison geometrique) (0 ~ 1 : 0.3) , temperature init (: 700)
+					Console.WriteLine("TYPE mu (geometry reason)");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 50 000)");
+					Console.WriteLine();
+					double mu = consoleChoice(0, 1, 0.3);
+					Console.WriteLine();
+
+					// nb Iteration ( : 50 000), mu(raison geometrique) (0 ~ 1 : 0.3) , temperature init (: 700)
+					Console.WriteLine("TYPE init temperature");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 700)");
+					Console.WriteLine();
+					int temp = consoleChoice(0, int.MaxValue, 700);
+					Console.WriteLine();
+
+					SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
+					Solution s = sim.run(nbIter, mu, temp);
+					Console.WriteLine(s);
+					s.writeToCSV();
+
+					break;
+				}
+
+			case 3:
+				{
+					// nb iteration ( : 10 000), population, proba mutation(0 ~ 1 : 0,001), proba magicTrick(0 ~ 1 : 0.1)
+					Console.Clear();
+					Console.WriteLine("ALGORITHM : 3 - GENETIC");
+					Console.WriteLine("TYPE nbIterations");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 10 000)");
+					Console.WriteLine();
+					int nbIter = consoleChoice(1, int.MaxValue, 10000);
+					Console.WriteLine();
+
+					// nb iteration ( : 10 000), population, proba mutation(0 ~ 1 : 0,001), proba magicTrick(0 ~ 1 : 0.1)
+					Console.WriteLine("TYPE population");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 20)");
+					Console.WriteLine();
+					int popu = consoleChoice(0, int.MaxValue, 20);
+					Console.WriteLine();
+
+					// nb iteration ( : 10 000), population, proba mutation(0 ~ 1 : 0,001), proba magicTrick(0 ~ 1 : 0.1)
+					Console.WriteLine("TYPE proba mutation");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 0,001)");
+					Console.WriteLine();
+					double muta = consoleChoice(0, 1, 0.001);
+					Console.WriteLine();
+
+					// nb iteration ( : 10 000), population, proba mutation(0 ~ 1 : 0,001), proba magicTrick(0 ~ 1 : 0.1)
+					Console.WriteLine("TYPE proba magicTrick");
+					Console.WriteLine("(PRESS ENTER FOR DEFAULT = 0,1)");
+					Console.WriteLine();
+					double magi = consoleChoice(0, 1, 0.1);
+					Console.WriteLine();
+
+					Genetic gene = new Genetic(agencies, cities, nbIter, popu, muta, magi);
+					Solution s = gene.getSolution();
+					Console.WriteLine(s);
+					s.writeToCSV();
+
+
+
+					break;
+				}
+			}
+			
+
+
+
+
+            
+
+
+
+
+
+
+
+
 
 
 			//Solution sp = s.getGradientDescendSolution();
@@ -205,95 +306,51 @@ namespace LieuxDeFormation
 			return cities;
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public static void rainbowprintLine(string s, string style = "random", int cycle = 1)
-		{
-			rainbowprint (s + "\n", style, cycle);
-		}
-
-		public static void rainbowprint(string s, string style = "random", int cycle = 1)
-		{
-			Array values = Enum.GetValues (typeof(ConsoleColor));
-			List<ConsoleColor> values2 = new List<ConsoleColor> ();
-			int count = 0;
-			values2.Add (ConsoleColor.Green);
-			values2.Add (ConsoleColor.Blue);
-			values2.Add (ConsoleColor.Magenta);
-			values2.Add (ConsoleColor.Red);
-			values2.Add (ConsoleColor.Yellow);
-			values2.Add (ConsoleColor.White);
-			values2.Add (ConsoleColor.Cyan);
-			switch (style) {
-			case "random":
-				count = 0;
-				Random random = new Random (Guid.NewGuid ().GetHashCode ());
-				foreach (char c in s) {
-					if (count >= cycle) {
-						count = 0;
-						Console.ForegroundColor = (ConsoleColor)values.GetValue (random.Next (values.Length - 1) + 1);
-					}
-					Console.Write (c);
-					count++;
-				}
-				break;
-			case "rainbow":
-				int i = 0;
-				count = 0;
-				foreach (char c in s) {
-					if (count >= cycle) {
-						count = 0;
-						Console.ForegroundColor = (ConsoleColor)values2 [i];
-						if (i < values2.Count - 1)
-							i++;
-						else
-							i = 0;
-					}
-					Console.Write (c);
-					count++;
-				}
-				break;
-			default:
-				Console.WriteLine("UNSUPPORTED RAINBOWPRINT STYLE");
-				break;
-			}
-		}
-
-		public static async void coolRandPrint(string s) {
-			int currentLineCursor = Console.CursorTop;
-			Random rand = new Random();
-			List<int> notok = Enumerable.Range(0, s.Length - 1).ToList();
+		public static int consoleChoice(int min, int max, int def = 0) {
+			int choice = 0;
 			do {
-
-				Console.SetCursorPosition(0, currentLineCursor);
-				for (int i = 0; i < s.Length; i++) {
-					if (notok.Contains(i)) {
-						char c = s[notok[rand.Next(0, notok.Count)]];
-						if (c == s[i])
-							notok.Remove(i);
-						Console.Write(c);
-					} else {
-						Console.Write(s[i]);
-					}
+				Console.Write("? ");
+				string str = Console.ReadLine();
+				try {
+					choice = int.Parse(keep(str, "0123456789"));
 				}
-				await Task.Delay(100);
-			} while (notok.Count > 0);
+				catch (FormatException) {
+					choice = def;
+				}
+			} while (choice > max || choice < min);
+			return choice;
 		}
+
+		public static double consoleChoice(double min, double max, double def = 0) {
+			double choice = 0;
+			do {
+				Console.Write("? ");
+				string str = Console.ReadLine();
+				try {
+					choice = double.Parse(keep(str, "0123456789.,").Replace(".", ","));
+				}
+				catch (FormatException) {
+					choice = def;
+				}
+			} while (choice > max || choice < min);
+			return choice;
+		}
+
+		public static string consoleChoice(string def) {
+			Console.Write("? ");
+			string str = Console.ReadLine();
+			if (str == "")
+				str = def;
+			return str;
+		}
+
+		public static string keep(string toFilter, string toKeep) {
+			string ret = "";
+			foreach (char c in toFilter)
+				if (toKeep.Contains(c))
+					ret += c;
+			return ret;
+		}
+     
 	}
 }

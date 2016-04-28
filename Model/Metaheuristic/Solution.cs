@@ -80,6 +80,7 @@ namespace Metaheuristic
 				}
 
 				_tuples[i] = new Tuple<Agency, City>(_agencies[i], canFit);
+
 				cities = null;
 			}
 		}
@@ -409,9 +410,8 @@ namespace Metaheuristic
 				double rnd = rand.NextDouble();
 				if (rnd < 0.5)
 					c = _cities[rand.Next(_cities.Count)];
-				else {
+				else
 					c = gUC[rand.Next(gUC.Count)];
-				}
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
@@ -812,7 +812,7 @@ namespace Metaheuristic
 		}
 
 		public void writeToCSV() {
-			StreamWriter sw = new StreamWriter(File.Create(DateTime.Now.ToString("RESULT dd_mm_yy HH-mm-ss") + ".csv"));
+			StreamWriter sw = new StreamWriter(File.Create("outputs/" + DateTime.Now.ToString("RESULT dd_mm_yy HH-mm-ss") + ".csv"));
 			sw.WriteLine("\"latitude1\";\"longitude1\";\"nbpersonne1\";\"latitude2\";\"longitude2\"");
 			foreach (Tuple<Agency, City> t in _tuples) {
 				sw.WriteLine(t.Item1.getLat() + ";" + t.Item1.getLong() + ";" + t.Item1.getNbPers() + ";" + t.Item2.getLat() + ";" + t.Item2.getLong());
