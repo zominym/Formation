@@ -15,9 +15,9 @@ namespace LieuxDeFormation
 	class MainClass
 	{
 		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		const string agenciesFile = "../../ListeAgences_1000.txt";
 
-		const int MAXPERS = 60;
+		public const int MAXPERS = 60;
 		static List<Agency> agencies;
 		static List<City> cities;
 		static public Random rand = new Random();
@@ -52,67 +52,67 @@ namespace LieuxDeFormation
 			cities = loadCities();
 
 
-//            Genetic algo = new Genetic(agencies, cities, 10000, 20);
-//			Solution s = algo.getSolution();
-//    		Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
+            Genetic algo = new Genetic(agencies, cities, 2000, 10);
+            Solution s = algo.getSolution();
+            Console.WriteLine(s);
+            Console.WriteLine(s.toStringShort());
 
 
-//			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
-//			Tuple<int, int>[] tuples2 = new Tuple<int, int>[10];
-//			tuples1 [0] = new Tuple<int,int>(20,10);
-//			tuples2 [0] = tuples1[0];
-//			tuples1[0] = new Tuple<int,int>(30, 40);
-//			Console.WriteLine(tuples2[0]);
+            //			Tuple<int, int>[] tuples1 = new Tuple<int, int>[10];
+            //			Tuple<int, int>[] tuples2 = new Tuple<int, int>[10];
+            //			tuples1 [0] = new Tuple<int,int>(20,10);
+            //			tuples2 [0] = tuples1[0];
+            //			tuples1[0] = new Tuple<int,int>(30, 40);
+            //			Console.WriteLine(tuples2[0]);
 
 
-			Taboo taboo = new Taboo(agencies, cities);
-			Solution s = taboo.run(1000);
-			Console.WriteLine(s);
-			Console.WriteLine(s.toStringShort());
-			Solution sp = s.getGradientDescendSolution();
-			Console.WriteLine(sp);
-			Console.WriteLine(sp.toStringShort());
-
-
-
-//			Solution s = new Solution(9);
-//			Console.WriteLine(s);
-//			Console.WriteLine(s.toStringShort());
+            //Taboo taboo = new Taboo(agencies, cities);
+            //Solution s = taboo.run(1000);
+            //Console.WriteLine(s);
+            //Console.WriteLine(s.toStringShort());
+            //Solution sp = s.getGradientDescendSolution();
+            //Console.WriteLine(sp);
+            //Console.WriteLine(sp.toStringShort());
 
 
 
-//			for (int i = 0; i < 10; i++) {
-//				Solution s = new Solution();
-//				//onsole.WriteLine(s);
-//				Console.WriteLine(s.toStringShort());
-//			}
+            //			Solution s = new Solution(9);
+            //			Console.WriteLine(s);
+            //			Console.WriteLine(s.toStringShort());
 
 
-//			Console.WriteLine();
-//			Console.WriteLine();
-//			Console.WriteLine("AGENCIES :");
-//			foreach (Agency a in agencies) {
-//				Console.WriteLine(a);
-//			}
-//
-//			Console.WriteLine();
-//			Console.WriteLine();
-//			Console.WriteLine("CITIES :");
-//			foreach (City c in cities) {
-//				Console.WriteLine(c);
-//			}
 
-//			Console.WriteLine();
-//			Console.WriteLine();
-//			Console.WriteLine("TESTS :");
+            //			for (int i = 0; i < 10; i++) {
+            //				Solution s = new Solution();
+            //				//onsole.WriteLine(s);
+            //				Console.WriteLine(s.toStringShort());
+            //			}
 
-			//List<City> cities2 = new List<City>();
-			/*for (int i = 0; i < agencies.Count(); i++)
+
+            //			Console.WriteLine();
+            //			Console.WriteLine();
+            //			Console.WriteLine("AGENCIES :");
+            //			foreach (Agency a in agencies) {
+            //				Console.WriteLine(a);
+            //			}
+            //
+            //			Console.WriteLine();
+            //			Console.WriteLine();
+            //			Console.WriteLine("CITIES :");
+            //			foreach (City c in cities) {
+            //				Console.WriteLine(c);
+            //			}
+
+            //			Console.WriteLine();
+            //			Console.WriteLine();
+            //			Console.WriteLine("TESTS :");
+
+            //List<City> cities2 = new List<City>();
+            /*for (int i = 0; i < agencies.Count(); i++)
 				cities2.Add(agencies[(i + 5) % agencies.Count()].toCity());
 			Solution sol = new Solution(agencies.ToArray(), cities2.ToArray());*/
 
-			/*Console.WriteLine("SOL :");
+            /*Console.WriteLine("SOL :");
 			Console.WriteLine(sol);
 
 			Console.WriteLine("COST :");
@@ -140,7 +140,7 @@ namespace LieuxDeFormation
 			Console.WriteLine();
 			*/
 
-			Console.WriteLine("END");
+            Console.WriteLine("END");
             Console.ReadKey(true);
         }
 

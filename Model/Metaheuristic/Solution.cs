@@ -13,13 +13,13 @@ namespace Metaheuristic
 		const int CITYCAPACITY = 60;
 
 		private double _cost = -1;
+        private int _centers = -1;
         private List<Solution> _neighbors = null;
         private List<Solution> _neighbors2 = null;
 		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 		private Random rand = LieuxDeFormation.MainClass.rand;
 		public static double nbSuccess = 1;
 		public static double nbTries = 1;
-
 		public int id;
 
 		// Constructeur de solution aléatoire
@@ -111,6 +111,7 @@ namespace Metaheuristic
 			id = ID + 1;
 			ID++;
 			_cost = -1;
+            _centers = -1;
 			for (int i = 0; i < _tuples.Length; i++)
 				_tuples[i] = s._tuples[i];
 			_neighbors = s._neighbors;
@@ -136,12 +137,35 @@ namespace Metaheuristic
 
 		public double Cost {
 			get {
+                /*
                 if (_cost != -1)
                     return _cost;
-                else
+                else */
                     return (_cost = calculateCost());
 			}
 		}
+
+        public double nbCenters
+        {
+            get
+            {
+                /*
+                if (_centers != -1)
+                    return _centers;
+                else */
+                    return (_centers = calculateCenters());
+            }
+        }
+
+        private int calculateCenters()
+        {
+            List<City> centers = new List<City>();
+            for (int i = 0; i < _tuples.Length; ++i)
+                if (!centers.Contains(_tuples[i].Item2))
+                    centers.Add(_tuples[i].Item2);
+            
+            return centers.Count;
+        }
 
         private void buildNeighborhood()
         {
@@ -408,13 +432,164 @@ namespace Metaheuristic
 			return nb;
 		}
 
-        public List<Solution> recombination(Solution mother)
+        public List<Solution> experiment(Solution mother)
         {
             int MAX_TRIES = 10;
+
             Solution son, daughter;
+
+            do
+            {
+                // Build son with this and daughter with mother
+                son = new Solution(this);
+                daughter = new Solution(mother);
+
+                // Select two random tuples
+                int i = rand.Next(_tuples.Length), j = rand.Next(_tuples.Length);
+
+                // Swapping one agency to the random city of mother
+                son._tuples[i] = new Tuple<Agency, City>(son._tuples[i].Item1, mother._tuples[j].Item2);
+                // Swapping the daughter with the son one's
+                daughter._tuples[j] = new Tuple<Agency, City>(daughter._tuples[j].Item1, this._tuples[i].Item2);
+
+                if (son.validateCities() && daughter.validateCities())
+                {
+                    List<Solution> result = new List<Solution>();
+                    result.Add(son);
+                    result.Add(daughter);
+                    return result;
+                }
+                MAX_TRIES--;
+            } while (MAX_TRIES > 0);
 
             return null;
         }
+
+        public List<Solution> recombinaison(Solution mother)
+        {
+            int MAX_TRIES = 20;
+
+            Solution son, daughter;
+
+            do
+            {
+                // Build son with this and daughter with mother
+                son = new Solution(this);
+                daughter = new Solution(mother);
+
+                // Select a random city in mother's tuples
+                City chosen = mother._tuples[rand.Next(_tuples.Length)].Item2;
+
+                Tuple<Agency, City> swap;
+                for (int i = 0; i < _tuples.Length; ++i)
+                {
+                    // Swapping
+                    if (mother._tuples[i].Item2 == chosen)
+                    {
+                        // Saving son current
+                        swap = son._tuples[i];
+                        // Son take from mother
+                        son._tuples[i] = daughter._tuples[i];
+                        // Daughter take from son
+                        daughter._tuples[i] = swap;
+                    }
+
+                }
+
+                if (son.validateCities() && daughter.validateCities())
+                {
+                    List<Solution> result = new List<Solution>();
+                    result.Add(son);
+                    result.Add(daughter);
+                    return result;
+                }
+                MAX_TRIES--;
+            } while (MAX_TRIES > 0);
+
+            return null;
+        }
+
+        public void badassMutation()
+        {
+            int MAX_TRIES = 10;
+            Dictionary<int, City> olders = new Dictionary<int, City>();
+            do
+            {
+                // Restore previous state
+                if (olders.Count > 0)
+                    foreach (int i in olders.Keys)
+                        _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, olders[i]);
+
+                olders.Clear();
+
+                // Chose a targeted city
+                City chosen = _tuples[rand.Next(_tuples.Length)].Item2;
+                // Chose a new location for the occurences of the city
+                City newLocation = MainClass.getCities()[rand.Next(MainClass.getCities().Count)];
+
+                // Change the targeted city in all tuples concerned
+                for (int i = 0; i < _tuples.Length; ++i)
+                {
+                    if (_tuples[i].Item2 == chosen)
+                    {
+                        // Saving current state
+                        olders.Add(i, _tuples[i].Item2);
+                        // Changing location
+                        _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, newLocation);
+                    }
+
+                }
+
+                // Check if the solution is correct
+                if(this.validateCities())
+                    return;
+              
+                MAX_TRIES--;
+            } while (MAX_TRIES > 0);
+
+            // Restore
+            if (olders.Count > 0)
+                foreach (int i in olders.Keys)
+                    _tuples[i] = new Tuple<Agency, City>(_tuples[i].Item1, olders[i]);
+
+            /* Randomise one tuple
+            _tuples[targeted] = new Tuple<Agency, City>(_tuples[targeted].Item1, MainClass.getCities()[rand.Next(MainClass.getCities().Count)]);
+            */
+
+        }
+
+        public void trick()
+        {
+            // Feed the monster with centers used with nobody in 
+            Dictionary<City, int> centers = new Dictionary<City, int>();
+            foreach (City c in getUsedCities())
+                centers.Add(c, 0);
+                        
+            // Take agency by agency
+            for (int i = 0; i < _tuples.Length; ++i)
+            {
+                Agency a = _tuples[i].Item1;
+
+                // Check the nearest city in centers
+                City min = null;
+                double dist, distMin = Double.MaxValue;
+                foreach (City c in centers.Keys)
+                {
+                    if ((dist = a.distanceTo(c)) < distMin && (centers[c] + a.getNbPers()) <= CITYCAPACITY)
+                    {
+                        min = c;
+                        distMin = a.distanceTo(c);
+                    }
+                }
+                // Assign to the new one
+                _tuples[i] = new Tuple<Agency, City>(a, min);
+
+                centers[min] += a.getNbPers();              
+            }
+
+        }
+
+
 
         public List<Solution> crossover(Solution mother)
 		{
