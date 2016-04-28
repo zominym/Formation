@@ -15,7 +15,7 @@ namespace LieuxDeFormation
 	class MainClass
 	{
 		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		const string agenciesFile = "../../ListeAgences_100.txt";
 
 		const int MAXPERS = 60;
 		static List<Agency> agencies;

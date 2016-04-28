@@ -63,12 +63,7 @@ namespace Metaheuristic
 			//			Console.WriteLine("Alerte 2 : " + " id : " + s.id + " getPersTot() : " + s.getPersTot());
 			Solution min = null;
 			for (int i = 0; i < s._tuples.Length; i++) {
-				Solution sp = s.mutate2a(i);
-				if (i == 0)
-					min = sp;
-				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)
-					min = sp;
-				sp = s.mutate2b(i);
+				Solution sp = s.mutate2(i);
 				if (i == 0)
 					min = sp;
 				if (sp.Cost < min.Cost /*&& !alreadyVisited(sp)*/)

@@ -455,25 +455,7 @@ namespace Metaheuristic
 			Solution temp = new Solution(this);
 			bool loop = true;
 			do {
-//				double centresIdeal = getPersTot()/CITYCAPACITY;
-//				double offset = (centresIdeal - getUsedCities().Count);
-//				double proba = 0;
-//				if (offset != 0)
-//					proba =  offset / centresIdeal;
-//				if (rand.NextDouble() < 0.5 /*nbSuccess / nbTries*/) {
-//					List<City> gUC = getUsedCities();
-//					int rnd = rand.Next(gUC.Count);
-//					City c = gUC[rnd];
-//					if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY) {
-//						loop = false;
-//						nbSuccess += 1;
-//						temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
-//					}
-//					//					if (c.distanceTo(temp._tuples[n].Item1) > 200)
-//					//						loop = true;
-//					nbTries += 1;
-//				}
-				/*else */if (rand.NextDouble() < 0.5) {
+				if (rand.NextDouble() < 0.5) {
 					List<City> cities = LieuxDeFormation.MainClass.getCities();
 					City c = cities[rand.Next(cities.Count)];
 					temp.swap(temp._tuples[n].Item2, c);
