@@ -14,16 +14,13 @@ namespace Metaheuristic
             
         }
 
-        public Solution run(int iteration, int populationSize, double initialTemperature){
+        public Solution run(int iteration, double micro, double initialTemperature){
 
             List<Solution> population = new List<Solution>();
 
-            for (int i = 0; i < populationSize; i++)
-                population.Add(new Solution());
-
             t = initialTemperature;
-            double µ = 0.5;
-            int param = 10;
+            double µ = micro;//0.5
+            int param = (int) Math.Floor(0.10*iteration);
             Solution xmin, xn, xnn, x0 = new Solution();
             xmin = x0;
             xn = x0;
@@ -32,8 +29,7 @@ namespace Metaheuristic
             for (int i = 0; i < iteration; i++)
             {
                 Console.WriteLine("ITER: " + i + " --> " + "actuel: " + xn.Cost + " min: " + xmin.Cost);
-                Solution y = xn.Neighbors2[rand.Next(xn.Neighbors2.Count)];
-                //Console.WriteLine("--> voisin: " + y.Cost);
+                Solution y = xn.mutate(rand.Next(LieuxDeFormation.MainClass.getAgencies().Count));//xn.Neighbors2[rand.Next(xn.Neighbors2.Count)];
                 double Δf = (y.Cost/1) - (xn.Cost/1);
                 if (Δf <= 0)
                 {
@@ -47,8 +43,9 @@ namespace Metaheuristic
                     else
                         xnn = xn;
                 }
+                if ((xn.Cost == xnn.Cost) & (t <= 0))
+                    break;
                 xn = xnn;
-                //Console.WriteLine("--> xnn: " + xnn.Cost);
                 if (i % param == 0)
                     t = µ * t;
             }
@@ -56,4 +53,3 @@ namespace Metaheuristic
         }
     }
 }
-
