@@ -37,9 +37,9 @@ namespace Metaheuristic
 			Solution s = min;
 			sw.WriteLine("\"cout\";\"distanceTotale\";\"nbcentres\"");
 			sw.WriteLine(s.toCSVShort());
-            Console.SetCursorPosition(0, Console.CursorTop);
+            
             //Console.Write("INIT --> " + "cost actuel : " + s.Cost);
-            Console.WriteLine("Iteration\tActual\t\tMin\t\tCenters");
+            
             //			Console.WriteLine(s.toStringShort());
             for (int i = 0; i < nbIter; i++) {
 //				if (s.getPersTot() != 522)
@@ -52,8 +52,7 @@ namespace Metaheuristic
 //				_visited.Add(s.Cost);
 //				else
 //					Console.WriteLine("On a empiré");
-                Console.SetCursorPosition(0, Console.CursorTop);
-				Console.Write(i + "\t\t" + (int) s.Cost + "\t\t" + (int) min.Cost + "\t\t" + s.getUsedCities().Count);
+                LieuxDeFormation.MainClass.print(i, s.Cost, min.Cost, s.getUsedCities().Count);
 //				Console.WriteLine(Solution.nbSuccess/Solution.nbTries);
 //				s.calculateCostBavard();
 //				Console.WriteLine(s.toStringShort());

@@ -15,7 +15,7 @@ namespace LieuxDeFormation
 	class MainClass
 	{
 		const string citiesFile = "../../LieuxPossibles.txt";
-		const string agenciesFile = "../../ListeAgences_500.txt";
+		const string agenciesFile = "../../ListeAgences_100.txt";
 
 		public const int MAXPERS = 60;
 		static List<Agency> agencies;
@@ -81,10 +81,6 @@ namespace LieuxDeFormation
 			Taboo taboo = new Taboo(agencies, cities);
 			Solution s = taboo.run(2000);
 			Console.WriteLine(s);
-
-			Console.WriteLine("calculated : " + City.calculated);
-			Console.WriteLine("retrieved : " + City.retrieved);
-
 			s.writeToCSV();
 
 
@@ -205,7 +201,18 @@ namespace LieuxDeFormation
 			return cities;
 		}
 
+        private static bool firstPrinting = true;
 
+        public static void print(int iteration, double cost, double min, int nbCenters)
+        {
+            if(firstPrinting)
+            {
+                Console.WriteLine("Iteration\tActual\t\tMin\t\tCenters");
+                firstPrinting = false;
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(iteration + "\t\t" + (int)cost + "\t\t" + (int)min + "\t\t" + nbCenters);
+        }
 
 
 
