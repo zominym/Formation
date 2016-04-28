@@ -358,14 +358,53 @@ namespace Metaheuristic
 			Solution temp = new Solution(this);
 			City c;
 			bool loop = true;
+			List<City> gUC = temp.getUsedCities();
 			do {
 				double rnd = rand.NextDouble();
 				if (rnd < 0.5)
 					c = _cities[rand.Next(_cities.Count)];
 				else {
-					List<City> gUC = temp.getUsedCities();
 					c = gUC[rand.Next(gUC.Count)];
 				}
+				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
+					loop = false;
+			} while (loop);
+
+			temp._cost = -1;
+			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+
+			return temp;
+		}
+
+		public Solution mutate(int n, List<City> gUC) {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
+			Solution temp = new Solution(this);
+			City c;
+			bool loop = true;
+			do {
+				double rnd = rand.NextDouble();
+				if (rnd < 0.5)
+					c = _cities[rand.Next(_cities.Count)];
+				else {
+					c = gUC[rand.Next(gUC.Count)];
+				}
+				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
+					loop = false;
+			} while (loop);
+
+			temp._cost = -1;
+			temp._tuples[n] = new Tuple<Agency, City>(temp._tuples[n].Item1, c);
+
+			return temp;
+		}
+
+		public Solution mutate3(int n) {
+			List<City> _cities = LieuxDeFormation.MainClass.getCities();
+			Solution temp = new Solution(this);
+			City c;
+			bool loop = true;
+			do {
+				c = _cities[rand.Next(_cities.Count)];
 				if (temp.getNbPers(c) + temp._tuples[n].Item1.getNbPers() <= CITYCAPACITY)
 					loop = false;
 			} while (loop);
