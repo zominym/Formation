@@ -44,9 +44,16 @@ namespace Metaheuristic
 
         public Solution getBestSolution(List<Solution> population){
 			Solution min = population.First();
+            double costMin = min.Cost;
+            double curentCost;
             foreach (Solution solution in population) {
-                if (solution.Cost < min.Cost)
+                curentCost = solution.Cost;
+                if (curentCost < costMin)
+                {
                     min = solution;
+                    costMin = curentCost;
+                }
+                    
             }
             return min;
         }
@@ -159,36 +166,58 @@ namespace Metaheuristic
         }
 
         public Solution getSolution() {
-            double ProbaCross = 0.99;
+            double ProbaMutation = 0.001;
+            double ProbaMagic = 0.0;
             List<Solution> nextPopulation, elite, crossResult, currentPopulation = buildPopulation();
-            Solution bestSolution = getBestSolution(currentPopulation);
-            
+            Solution bestSolution = getBestSolution(currentPopulation), currentBest;
+            int bestSolutionCost = (int) bestSolution.Cost;
+
+            Console.WriteLine("Cout\t\tAgences\t\tProgression");
+
             for (int i = 0; i < Iterations; i++) {
-                //Console.WriteLine(" ITE " + i);
-				nextPopulation = RouletteVladof(currentPopulation, currentPopulation.Count / 2);
-                elite = new List<Solution>(nextPopulation);
+                // Creation of the new population
+                nextPopulation = new List<Solution>();
+
+                // Selection of the representative
+                elite = RouletteVladof(currentPopulation, currentPopulation.Count / 2);
                 
+                // Reproduction
                 while(nextPopulation.Count < currentPopulation.Count) {
-                    if((crossResult = elite[rand.Next(elite.Count)].crossover(elite[rand.Next(elite.Count)])) != null)
-                    nextPopulation.AddRange(crossResult);
-                    if (ProbaCross > rand.NextDouble())
-						nextPopulation[rand.Next(nextPopulation.Count)].mutation();
+                    // Combinaison
+                    if((crossResult = elite[rand.Next(elite.Count)].experiment(elite[rand.Next(elite.Count)])) != null)
+                        nextPopulation.AddRange(crossResult);
+
+                    // Mutation
+                    if (nextPopulation.Count > 0)
+                    {
+                        if(rand.NextDouble() > (1 - ProbaMagic))
+						    nextPopulation[rand.Next(nextPopulation.Count)].trick();
+                        if(rand.NextDouble() > (1 - ProbaMutation))
+                            nextPopulation[rand.Next(nextPopulation.Count)].badassMutation();
+                    }
+                        
                 }
+
+                // Next generation is the new generation
                 currentPopulation = nextPopulation;
-				/*
-					foreach (Solution s in currentPopulation) {
-						//Console.WriteLine(s);
-					}
-					foreach (Solution s in currentPopulation) {
-						//Console.WriteLine(s.Cost);
-						//Console.WriteLine(s.id);
-					}
-                */
-                Console.WriteLine(getBestSolution(currentPopulation).Cost);
-                if (bestSolution.Cost > getBestSolution(currentPopulation).Cost)
+                
+                // See who's the bigest
+                currentBest = getBestSolution(currentPopulation);
+                int currentBestCost = (int) currentBest.Cost;
+                Console.SetCursorPosition(0, Console.CursorTop);              
+                Console.Write(currentBestCost  + "\t\t" + currentBest.nbCenters + "\t\t" + i + "/" + Iterations);
+
+                // Take the legend
+                if (bestSolutionCost > currentBestCost)
+                {
                     bestSolution = getBestSolution(currentPopulation);
+                    bestSolutionCost = (int) bestSolution.Cost;
+                }
+                    
             }
-            return bestSolution.getGradientDescendSolution();
+
+            // Show the legend
+            return bestSolution;
         }
     }
 }

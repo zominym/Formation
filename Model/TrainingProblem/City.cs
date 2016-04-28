@@ -87,6 +87,14 @@ namespace TrainingProblem
 		public string getCodePostal() {
 			return codepostal;
 		}
+
+		public double getLat() {
+			return latitude;
+		}
+
+		public double getLong() {
+			return longitude;
+		}
 	}
 }
 
