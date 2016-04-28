@@ -7,11 +7,6 @@ namespace TrainingProblem
 
 		protected int nbPers;
 
-		public Agency() : base()
-		{
-			nbPers = 0;
-		}
-
 		public Agency(string csvLine) : base(csvLine)
 		{
 			nbPers = int.Parse(csvLine.Split (';')[5]);

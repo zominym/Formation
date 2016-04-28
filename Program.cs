@@ -22,6 +22,7 @@ namespace LieuxDeFormation
 		static List<City> cities;
 		static public Random rand = new Random();
 
+		static public double[,] distTab;
 
 		// BROUILLON
 		/*
@@ -51,6 +52,11 @@ namespace LieuxDeFormation
 			agencies = loadAgencies();
 			cities = loadCities();
 
+			distTab = new double[cities.Count + agencies.Count, cities.Count + agencies.Count];
+			for (int i = 0; i < cities.Count + agencies.Count; i++)
+				for (int j = 0; j < cities.Count + agencies.Count; j++)
+					distTab[i, j] = -1;
+
 
             //Genetic algo = new Genetic(agencies, cities, 2000, 10);
             //Solution s = algo.getSolution();
@@ -70,8 +76,10 @@ namespace LieuxDeFormation
 			Solution s = taboo.run(1000);
 			Console.WriteLine(s);
 
-			s.writeToCSV();
+			Console.WriteLine("calculated : " + City.calculated);
+			Console.WriteLine("retrieved : " + City.retrieved);
 
+			s.writeToCSV();
 
 			//Solution sp = s.getGradientDescendSolution();
 			//Console.WriteLine(sp);

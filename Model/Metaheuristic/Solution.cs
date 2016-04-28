@@ -14,7 +14,6 @@ namespace Metaheuristic
 		const int CITYCAPACITY = 60;
 
 		private double _cost = -1;
-        private int _centers = -1;
         private List<Solution> _neighbors = null;
         private List<Solution> _neighbors2 = null;
 		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
@@ -22,6 +21,7 @@ namespace Metaheuristic
 		public static double nbSuccess = 1;
 		public static double nbTries = 1;
 		public int id;
+
 
 		// Constructeur de solution aléatoire
 		public Solution() {
@@ -148,7 +148,6 @@ namespace Metaheuristic
 			id = ID + 1;
 			ID++;
 			_cost = -1;
-            _centers = -1;
 			for (int i = 0; i < _tuples.Length; i++)
 				_tuples[i] = s._tuples[i];
 			_neighbors = s._neighbors;
@@ -189,7 +188,7 @@ namespace Metaheuristic
                 if (_centers != -1)
                     return _centers;
                 else */
-                    return (_centers = calculateCenters());
+                    return (calculateCenters());
             }
         }
 
@@ -672,7 +671,7 @@ namespace Metaheuristic
                     if ((dist = a.distanceTo(c)) < distMin && (centers[c] + a.getNbPers()) <= CITYCAPACITY)
                     {
                         min = c;
-                        distMin = a.distanceTo(c);
+                        distMin = dist;
                     }
                 }
                 // Assign to the new one
