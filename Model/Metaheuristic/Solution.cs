@@ -8,17 +8,19 @@ namespace Metaheuristic
 {
     public class Solution
     {
-		static int ID = 0;
-		double TRANSPORTFEE = 0.4;
-		int AGENCYFEE = 3000;
-		const int CITYCAPACITY = 60;
+		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
 
-		private double _cost = -1;
+        static int ID = 0;
+        double TRANSPORTFEE = 0.4;
+        int AGENCYFEE = 3000;
+        const int CITYCAPACITY = 60;
+
+        private double _cost = -1;
         private int _centers = -1;
         private List<Solution> _neighbors = null;
         private List<Solution> _neighbors2 = null;
-		public Tuple<Agency, City>[] _tuples = new Tuple<Agency, City>[MainClass.getAgencies().Count];
-		private Random rand = LieuxDeFormation.MainClass.rand;
+
+        private Random rand = LieuxDeFormation.MainClass.rand;
 		public static double nbSuccess = 1;
 		public static double nbTries = 1;
 		public int id;
