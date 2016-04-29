@@ -175,8 +175,6 @@ namespace Metaheuristic
             Solution bestSolution = getBestSolution(currentPopulation), currentBest;
             int bestSolutionCost = (int) bestSolution.Cost;
 
-            Console.WriteLine("Cout\t\tAgences\t\tProgression");
-
             for (int i = 0; i < Iterations; i++) {
                 // Creation of the new population
                 nextPopulation = new List<Solution>();
@@ -207,9 +205,8 @@ namespace Metaheuristic
                 // See who's the bigest
                 currentBest = getBestSolution(currentPopulation);
                 int currentBestCost = (int) currentBest.Cost;
-                Console.SetCursorPosition(0, Console.CursorTop);              
-                Console.Write(currentBestCost  + "\t\t" + currentBest.nbCenters + "\t\t" + i + "/" + Iterations);
-				LieuxDeFormation.MainClass.print(i, (double)currentBestCost, (double)bestSolutionCost, (int)currentBest.nbCenters);
+
+				LieuxDeFormation.MainClass.print(i, (double) currentBestCost, (double)bestSolutionCost, (int)currentBest.nbCenters);
                 // Take the legend
                 if (bestSolutionCost > currentBestCost)
                 {
