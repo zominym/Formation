@@ -246,7 +246,7 @@ namespace LieuxDeFormation
                 firstPrinting = false;
             }
             Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(iteration + "\t\t" + (int)cost + "\t\t" + (int)min + "\t\t" + nbCenters);
+			Console.Write(iteration + "\t\t" + cost.ToString("I") + "\t\t" + min.ToString("I") + "\t\t" + nbCenters);
         }
 
 		public static double consoleChoice(double min, double max, double def = 0) {

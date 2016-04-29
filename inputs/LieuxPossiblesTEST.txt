@@ -1,0 +1,4 @@
+"id";"nom";"codepostal";"longitude";"latitude"
+"saint-genis-pouilly";"Saint-Genis-Pouilly";"01630";6.01667;46.25
+"mont-saint-martin-54";"Mont-Saint-Martin";"54350";5.78333;49.5333
+"fosses-95";"Fosses";"95470";2.48333;49.1
