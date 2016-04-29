@@ -93,6 +93,8 @@ namespace LieuxDeFormation
 
 					Taboo taboo = new Taboo(agencies, cities);
 					Solution s = taboo.run(nbIter);
+					Console.WriteLine();
+					Console.WriteLine();
 					Console.WriteLine(s);
 					s.writeToCSV();
 
@@ -125,6 +127,8 @@ namespace LieuxDeFormation
 
 					SimulatedAnnealing sim = new SimulatedAnnealing(agencies, cities);
 					Solution s = sim.run(nbIter, mu, temp);
+					Console.WriteLine();
+					Console.WriteLine();
 					Console.WriteLine(s);
 					s.writeToCSV();
 
@@ -165,6 +169,8 @@ namespace LieuxDeFormation
 
 					Genetic gene = new Genetic(agencies, cities, nbIter, popu, muta, magi);
 					Solution s = gene.getSolution();
+					Console.WriteLine();
+					Console.WriteLine();
 					Console.WriteLine(s);
 					s.writeToCSV();
 
@@ -246,7 +252,7 @@ namespace LieuxDeFormation
                 firstPrinting = false;
             }
             Console.SetCursorPosition(0, Console.CursorTop);
-			Console.Write(iteration + "\t\t" + (int) cost + "\t\t" + (int) min + "\t\t" + nbCenters);
+			Console.Write(iteration + "\t\t" + (int) cost + " \t\t" + (int) min + " \t\t" + nbCenters);
         }
 
 		public static double consoleChoice(double min, double max, double def = 0) {

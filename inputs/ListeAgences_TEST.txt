@@ -1,7 +1,0 @@
-"id";"nom";"codepostal";"longitude";"latitude";"nbpersonnes1"
-"saint-romain-sur-gironde";"Saint-Romain-sur-Gironde";"17240";-0.75;45.45;9
-"saint-christophe-du-ligneron";"Saint-Christophe-du-Ligneron";"85670";-1.76667;46.8333;4
-"rigny-la-nonneuse";"Rigny-la-Nonneuse";"10290";3.66667;48.4167;9
-"contigne";"Contigné";"49330";-0.516667;47.7333;2
-"saint-michel-34";"Saint-Michel";"34520";3.38333;43.85;3
-"grivy-loisy";"Grivy-Loisy";"08400";4.63333;49.4167;4

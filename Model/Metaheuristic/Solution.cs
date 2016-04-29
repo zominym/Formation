@@ -827,9 +827,9 @@ namespace Metaheuristic
             string str = "";
             for (int i = 0; i < _tuples.Length; i++)
             {
-				str += "AGENCY " + " " + _tuples[i].Item1.getId();
+				str += "AGENCY " + " " + _tuples[i].Item1.getName();
                 str += " ---> ";
-				str += "CITY " + " " + _tuples[i].Item2.getId();
+				str += "CENTER " + " " + _tuples[i].Item2.getName();
 				str += "\n";
             }
 			str += "COST : " + this.calculateCost();
