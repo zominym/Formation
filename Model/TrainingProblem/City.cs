@@ -10,8 +10,6 @@ namespace TrainingProblem
 		protected string codepostal;
 		public double longitude;
 		public double latitude;
-		public static int retrieved;
-		public static int calculated;
 
 		public City () : this("\"example_id\";\"example_name\";\"example_codepostal\";9.99999;99.9999") {
 			// NOTHING
@@ -42,12 +40,8 @@ namespace TrainingProblem
 		{
 			double[,] distTab = LieuxDeFormation.MainClass.distTab;
 			double d = distTab[id, c.getId()];
-			if (d != -1) {
-				retrieved++;
+			if (d != -1)
 				return d;
-			}
-
-			calculated++;
 
 			double lat1 = this.latitude;
 			double lon1 = this.longitude;

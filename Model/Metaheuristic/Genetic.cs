@@ -209,7 +209,7 @@ namespace Metaheuristic
                 int currentBestCost = (int) currentBest.Cost;
                 Console.SetCursorPosition(0, Console.CursorTop);              
                 Console.Write(currentBestCost  + "\t\t" + currentBest.nbCenters + "\t\t" + i + "/" + Iterations);
-				LieuxDeFormation.MainClass.print(i, currentBestCost, bestSolutionCost, currentBest.nbCenters);
+				LieuxDeFormation.MainClass.print(i, (double)currentBestCost, (double)bestSolutionCost, (int)currentBest.nbCenters);
                 // Take the legend
                 if (bestSolutionCost > currentBestCost)
                 {

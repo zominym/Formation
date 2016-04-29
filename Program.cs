@@ -173,91 +173,6 @@ namespace LieuxDeFormation
 					break;
 				}
 			}
-			
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-			//Solution sp = s.getGradientDescendSolution();
-			//Console.WriteLine(sp);
-			//Console.WriteLine(sp.toStringShort());
-
-
-
-            //			Solution s = new Solution(9);
-            //			Console.WriteLine(s);
-            //			Console.WriteLine(s.toStringShort());
-
-
-
-            //			for (int i = 0; i < 10; i++) {
-            //				Solution s = new Solution();
-            //				//onsole.WriteLine(s);
-            //				Console.WriteLine(s.toStringShort());
-            //			}
-
-
-            //			Console.WriteLine();
-            //			Console.WriteLine();
-            //			Console.WriteLine("AGENCIES :");
-            //			foreach (Agency a in agencies) {
-            //				Console.WriteLine(a);
-            //			}
-            //
-            //			Console.WriteLine();
-            //			Console.WriteLine();
-            //			Console.WriteLine("CITIES :");
-            //			foreach (City c in cities) {
-            //				Console.WriteLine(c);
-            //			}
-
-            //			Console.WriteLine();
-            //			Console.WriteLine();
-            //			Console.WriteLine("TESTS :");
-
-            //List<City> cities2 = new List<City>();
-            /*for (int i = 0; i < agencies.Count(); i++)
-				cities2.Add(agencies[(i + 5) % agencies.Count()].toCity());
-			Solution sol = new Solution(agencies.ToArray(), cities2.ToArray());*/
-
-            /*Console.WriteLine("SOL :");
-			Console.WriteLine(sol);
-
-			Console.WriteLine("COST :");
-			Console.WriteLine(sol.Cost);
-
-			Console.WriteLine("MUTATING ...");
-			sol.mutate(cities.ToArray());
-
-			Console.WriteLine("SOL :");
-			Console.WriteLine(sol);
-
-			Console.WriteLine("COST :");
-			Console.WriteLine(sol.Cost);
-
-			Console.WriteLine("GRADIENT DESCENT ...");
-			Solution betterSol = sol.getGradientDescendSolution();
-
-			Console.WriteLine("SOL :");
-			Console.WriteLine(betterSol);
-
-			Console.WriteLine("COST :");
-			Console.WriteLine(betterSol.Cost);
-
-			Console.WriteLine();
-			Console.WriteLine();
-			*/
 
             Console.WriteLine("END");
             Console.ReadKey(true);
@@ -320,6 +235,19 @@ namespace LieuxDeFormation
 			} while (choice > max || choice < min);
 			return choice;
 		}
+
+        private static bool firstPrinting = true;
+
+        public static void print(int iteration, double cost, double min, int nbCenters)
+        {
+            if(firstPrinting)
+            {
+                Console.WriteLine("Iteration\tActual\t\tMin\t\tCenters");
+                firstPrinting = false;
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(iteration + "\t\t" + (int)cost + "\t\t" + (int)min + "\t\t" + nbCenters);
+        }
 
 		public static double consoleChoice(double min, double max, double def = 0) {
 			double choice = 0;
