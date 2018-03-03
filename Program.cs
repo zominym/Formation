@@ -51,11 +51,16 @@ namespace LieuxDeFormation
 					cities = loadCities();
 					loop = false;
 				}
-				catch (FileNotFoundException) {
+				catch (FileNotFoundException e) {
 					Console.WriteLine("FILE NOT FOUND");
 					loop = true;
 				}
-			} while (loop);
+                catch (DirectoryNotFoundException e)
+                {
+                    Console.WriteLine("FILE NOT FOUND");
+                    loop = true;
+                }
+            } while (loop);
 
 
 			distTab = new double[cities.Count + agencies.Count, cities.Count + agencies.Count];
@@ -187,9 +192,12 @@ namespace LieuxDeFormation
 		public static List<City> loadCities()
 		{
 			List<City> cities = new List<City>();
-			StreamReader fs = new StreamReader(citiesFile);
+            StreamReader fs = null;
 
-			String line = fs.ReadLine();
+            try { fs = new StreamReader(citiesFile); }
+            catch (Exception) { throw; }
+
+            String line = fs.ReadLine();
 
 			while((line = fs.ReadLine()) != null)
 			{
@@ -204,7 +212,11 @@ namespace LieuxDeFormation
 		public static List<Agency> loadAgencies()
 		{
 			List<Agency> agencies = new List<Agency>();
-			StreamReader fs = new StreamReader(agenciesFile);
+
+            StreamReader fs = null;
+
+            try { fs = new StreamReader(agenciesFile); }
+            catch (Exception) { throw; }
 
 			String line = fs.ReadLine();
 
